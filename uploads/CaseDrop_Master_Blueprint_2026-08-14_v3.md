@@ -1959,3 +1959,293 @@ Both systems are subordinate to §17:
 > CaseDrop should never feel like *guess what the author thinks.*
 
 The glossary defines terms and never resolves cases. Groups compare decisions and never influence them.
+
+---
+
+# 27. Revision v3 — AI Jury Panel, Ghost Matching, and Navigation
+
+**Status:** Supersedes §11 in full. Extends §3, §13, §19, §21, §22.
+
+This revision replaces the human jury with a panel of ten AI jurors, replaces live Ranked matchmaking with ghost matching, and reduces bottom navigation to four destinations.
+
+---
+
+## 27.1 Why the Human Jury Is Replaced
+
+§11 asked human jurors to evaluate *advocacy given available information*. In practice, untrained jurors vote their own conclusion on the case. On a case with a 60/40 natural split (§4.1), that hands the majority-side advocate a systematic win-rate advantage — the exact condition §9 states must not exist, or Side-Lock Tickets become pay-to-win.
+
+That bias is detectable but not correctable in a crowd. A rubric-driven panel has no prior about the case, and its side-tilt can be measured offline before a case ships (§27.7).
+
+The human jury also created three operational problems, all of which disappear:
+
+- verdicts required jury throughput, so results arrived hours or days late,
+- the jury queue needed population the product does not have at launch,
+- juring was unpaid work with no payoff, so supply was never guaranteed.
+
+The governing division becomes:
+
+```text
+DAILY   — what people think    — human aggregate (§13.1, unchanged)
+RANKED  — how well you argued  — AI rubric panel (this section)
+```
+
+Community percentages in Daily remain a human signal. Nothing is lost.
+
+---
+
+## 27.2 The Panel
+
+Ten jurors evaluate each Ranked matchup. Jurors are defined by **position on how law should be read**, not by personality quirk, so that a split is legible as feedback.
+
+| Juror | Reads for |
+|---|---|
+| Formalist | What the rule actually says |
+| Pragmatist | What outcome works in practice |
+| Skeptic | Assertions unsupported by cited evidence |
+| Equitable | Fairness to the person in front of them |
+| Evidence-first | Only what the advocate actually cited |
+| Institutionalist | Deference to process and authority |
+| Plain-reader | The intelligent layperson's reading |
+| Contrarian | Probes the intuitive side |
+
+A 6–4 split therefore reads as *"you won the formalists and lost the pragmatists"* — advocacy feedback, delivered through the competitive loop rather than a separate teaching surface.
+
+**Roster size.** The shipped pool is approximately **24** jurors spanning these positions. Each match draws **10**. Players will attempt to reverse-engineer what the panel rewards; a rotating draw and an unpublished rubric make that unprofitable.
+
+---
+
+## 27.3 Panel Rules
+
+These are mechanical requirements, not guidance.
+
+1. **Side-blind and stat-blind.** Jurors receive the case, the evidence each advocate opened, and the two arguments. They never receive community percentages, player ratings, side labels, or which position is popular.
+2. **Order randomised per juror.** Five jurors receive argument A first, five receive B first. Language models carry real position bias; splitting the order eliminates it at zero cost. This rule is not optional.
+3. **Deterministic.** The same case and the same two arguments produce the same verdict every time. Temperature 0. This makes verdicts auditable and removes "I drew a bad panel" as a complaint.
+4. **Verdict is binary per juror.** Each juror returns a side plus one line of rationale. The match verdict is the majority.
+5. **No juror sees another juror's output.** Ten independent reads, not a deliberation.
+
+---
+
+## 27.4 Reveal
+
+Verdicts are **not** delivered as a block. They reveal one at a time, each with its juror's one-line rationale, with the tally building on screen (1–0, 2–1, 3–1…).
+
+This is the product's highest-value screen. It carries the competitive payoff, doubles as free coaching on every match, and covers panel latency. It replaces §21.1 screen 8 (Verdict / Reveal) as the Ranked verdict presentation.
+
+Full-screen, flow layer, no bottom navigation (consistent with §19).
+
+---
+
+## 27.5 Ghost Matching
+
+Ranked no longer waits for a live opponent. A player is matched against a **stored argument** written by a previous player who took the other side on the same case and a compatible evidence bundle (§10.2).
+
+Consequences:
+
+- **No matchmaking wait.** An opponent always exists.
+- **§8.4 dissolves.** A Side-Lock Ticket is trivially satisfiable — the matchmaker selects a stored opponent from the required side. The incompatible-pairing problem described in §8.4 no longer occurs, and free players no longer absorb the unpopular side.
+- **The library compounds.** Every Ranked argument ever written becomes matchable content permanently.
+- **Ratings still move both ways.** The stored player's rating updates when their argument is judged again.
+
+**Cold start.** Seed each case with authored arguments on both sides. Seeded arguments are labelled as such internally and carry no rating.
+
+**§5 and §6 are unaffected.** Fairness-weighted side assignment still governs which side the live player receives; ghost selection follows that assignment rather than replacing it.
+
+---
+
+## 27.6 Recommended Architecture — Independent Scoring
+
+Two ways to run the panel:
+
+**A. Head-to-head.** The panel receives both arguments and picks a winner.
+**B. Independent scoring (recommended).** The panel scores one argument against the rubric in isolation. The verdict is whichever score is higher.
+
+Independent scoring is preferred:
+
+- **The ghost's score is computed once and reused forever.** A stored argument carries its panel score in the database; every future match it appears in reuses it. Only the live player's argument is scored.
+- **Position bias cannot occur at all**, because no ordering exists — §27.3 rule 2 becomes structurally unnecessary rather than mitigated.
+- Verdicts stay comparable across every match a given argument appears in.
+
+The reveal (§27.4) is unchanged in presentation: each juror's rationale is written about the live player's argument, and the tally is derived from the score comparison. The player experiences a head-to-head duel; the system runs an absolute score.
+
+**If head-to-head is chosen instead, §27.3 rule 2 is mandatory.**
+
+---
+
+## 27.7 Balance Instrumentation
+
+The panel is measurable in a way a crowd never was. Before a case enters Ranked rotation:
+
+- run authored arguments for both sides through the panel offline,
+- confirm neither side wins systematically,
+- adjust the case, the evidence bundles, or the pairings until it does not.
+
+This replaces the wait-for-live-data loop implied by §14 for side balance specifically. §13.3 (bundle performance) and §13.4 (individual evidence performance) continue to require live data.
+
+**§13.2 is amended:** competitive side win rate now measures panel behaviour, not human behaviour. It remains the governing metric for §9 — if one side wins materially more than 50% of panel verdicts, Side-Lock Tickets for that side must be suspended until the case set is rebalanced.
+
+---
+
+## 27.8 Daily — Post-Case Analysis
+
+Daily gains a post-verdict analysis screen, placed between the verdict (§21.1 screen 8) and Learn / Review (screen 12).
+
+**Word limit is amended.** The 60-word cap exists so that jurors can compare two arguments fairly. Daily has no juror.
+
+```text
+DAILY   150 words   (no comparability constraint)
+RANKED   60 words   (comparability is the whole point)
+```
+
+### 27.8.1 Evidence Debrief — Ships First, No Model Required
+
+Each evidence item gains an authored field:
+
+```text
+Evidence.wouldHaveSupported   string[]   decision option keys this item supports
+```
+
+The debrief is then deterministic: the player opened two of five, and the three unopened cards are shown with what they would have supported. This requires no inference call, is always correct, costs nothing, and directly serves the §10.1 design goal ("Damn, I should have opened that one"). Build this before any model-driven analysis.
+
+### 27.8.2 Analysis Neutrality Rule
+
+This is the governing constraint on model-generated analysis, mirroring §24.4.
+
+> **The analysis critiques the advocacy. It never evaluates the conclusion.**
+
+Prohibited in any generated analysis:
+
+- any statement that the player's position was the weaker one,
+- any indication of a correct answer,
+- any language favouring a side,
+- any resolution of the case's ambiguity.
+
+Permitted:
+
+- claims asserted without citing evidence the player had opened,
+- evidence opened but never used,
+- unopened evidence that would have supported a claim the player made unsupported,
+- structural observations about the argument's construction.
+
+An analysis that reads differently depending on which side the player chose has failed. Violating this converts the coach into an answer key and destroys §17.
+
+### 27.8.3 Monetisation
+
+Word count is **not** sold. Selling length gives paying players a different game and abandons the compression discipline.
+
+| Tier | Receives |
+|---|---|
+| Free | One headline insight; full deterministic evidence debrief (§27.8.1) |
+| Subscriber | Full breakdown, all five evidence items analysed, reasoning patterns tracked across cases |
+
+The cross-case pattern layer ("you consistently under-use documentary evidence") is the subscription's compounding value: it is worth more the longer a player stays.
+
+---
+
+## 27.9 Navigation — Amends §19
+
+Bottom navigation is reduced from five destinations to **four**:
+
+```text
+HOME    RANK    LEARN    PROFILE
+```
+
+Rationale for each change:
+
+- **Jury is removed.** Its function is now performed by the panel. Ranked with ghost matching and instant verdicts is itself the endless loop, so no jury queue is needed as filler content.
+- **Sunday is removed from the bar.** A weekly mode held one-fifth of the bottom bar for one-seventh of the week. Sunday becomes a Home card, present only when the mode is live, which is also more eventful than a permanently dormant tab.
+- **Learn is promoted.** It hosts the post-case analysis (§27.8), the glossary index, and past case reviews — the repeat-visit surface.
+- **Groups remains untabbed**, surfaced inside Home, Rank, and Profile exactly as §25.3 specifies.
+
+Icon-plus-label tab items are permitted, amending the §18.3 avoid-list entry on icon-heavy navigation. Labels remain mandatory; icon-only navigation stays prohibited.
+
+Four destinations is the specification. Five was never a requirement.
+
+---
+
+## 27.10 Expected Cost Per Case
+
+Pricing basis: Anthropic list rates, 2026-08. Cached input bills at 10% of the input rate; cache writes bill at 1.25×. Figures below assume the case text, full evidence set, and rubric form the cached prefix, with juror personas and the argument(s) in the uncached tail.
+
+| Model | Input / MTok | Output / MTok | Min cacheable prefix |
+|---|---:|---:|---:|
+| Claude Opus 5 | $5.00 | $25.00 | 512 |
+| Claude Sonnet 5 | $3.00 | $15.00 | 1,024 |
+| Claude Haiku 4.5 | $1.00 | $5.00 | 4,096 |
+
+### 27.10.1 One Ranked Match
+
+Token assumptions: ~3,500 cached prefix, ~1,000 uncached (10 persona blocks, arguments, evidence-opened list), ~600 output (10 verdicts plus one-line rationales), single call.
+
+| Model | Head-to-head | Independent scoring (§27.6) |
+|---|---:|---:|
+| Claude Opus 5 | ~$0.022 | ~$0.019 |
+| Claude Sonnet 5 | ~$0.013 | ~$0.011 |
+| Claude Haiku 4.5 | ~$0.0075 | ~$0.0065 |
+
+Independent scoring's saving is modest per call — its value is that a ghost's score is computed once and reused across every future match, and that position bias is structurally impossible.
+
+### 27.10.2 One Daily Case
+
+Deterministic evidence debrief (§27.8.1): **$0.00.**
+
+Model-generated analysis — ~2,500 cached prefix, ~230 uncached, ~350 output:
+
+| Model | Cost |
+|---|---:|
+| Claude Opus 5 | ~$0.011 |
+| Claude Sonnet 5 | ~$0.0067 |
+| Claude Haiku 4.5 | ~$0.0045 |
+
+### 27.10.3 Monthly Projection
+
+At 10,000 daily active users averaging one Daily case and three Ranked matches per day:
+
+| Model | Per day | Per month | Per user / month |
+|---|---:|---:|---:|
+| Claude Opus 5 | ~$766 | ~$23,000 | ~$2.30 |
+| Claude Sonnet 5 | ~$460 | ~$13,800 | ~$1.38 |
+| Claude Haiku 4.5 | ~$270 | ~$8,100 | ~$0.81 |
+
+### 27.10.4 The Structural Finding
+
+**Uncapped Ranked play costs more per free user than a free user is likely to monetise.** At three matches per day, per-user inference cost is $0.81–$2.30 per month against a subscriber conversion rate that will realistically sit in low single digits.
+
+Ranked therefore requires a **free-tier daily match cap**. This is not a compromise — it is a monetisation hook that sells nothing competitive:
+
+| Tier | Ranked matches |
+|---|---|
+| Free | Capped per day |
+| Subscriber | Uncapped |
+
+Rating, evidence quality, opponent quality, and panel treatment remain identical across tiers, so this satisfies §15. The cap number is **TBD** and should be set from measured retention, not from cost alone.
+
+### 27.10.5 Cost Engineering Notes
+
+- **Prefix ordering matters.** The case, evidence set, and rubric are stable per case and belong in the cached span. The ten drawn personas rotate per match (§27.2) and must sit *after* the cache breakpoint, or the rotation invalidates the cache on every match.
+- **Haiku 4.5 requires a ≥4,096-token prefix to cache at all.** A 3,500-token prefix silently will not cache on Haiku — no error, just full-price input. Either pad the prefix past the threshold or accept the uncached rate.
+- **One call, not ten.** The panel returns all ten verdicts from a single request. Ten separate calls multiply cost with no quality gain.
+- **The reveal animation covers latency.** Verdicts arrive together; the sequential presentation (§27.4) hides the round trip.
+- **A failure fallback is mandatory.** If the inference call fails or times out, the match queues and the player is notified when the verdict lands. Ranked must never be dead because an API call failed.
+
+---
+
+## 27.11 Amendment Register
+
+| Section | Change |
+|---|---|
+| §3 Ranked Match Structure | Steps 11–14 replaced. No jury queue, no asynchronous vote threshold. Verdict is returned within the session. |
+| §8.4 Matchmaking With Tickets | Dissolved by §27.5. Ghost matching satisfies any lock without pairing constraints. |
+| §11 Jury Design | **Superseded in full** by §27.2–§27.4. |
+| §13.1 Community Position | Unchanged. Daily remains a human signal. |
+| §13.2 Competitive Side Win Rate | Now measures panel verdicts. Remains the governing metric for §9. |
+| §14 Balance Intervention | Side-balance review moves offline and pre-ship (§27.7). Bundle and evidence review still require live data. |
+| §19 Navigation Rule | Amended to four destinations (§27.9). Hub/flow split is otherwise unchanged. |
+| §18.3 Avoid List | Icon-plus-label tab items permitted. Icon-only navigation remains prohibited. |
+| §20.3 Argument | Word cap split: Daily 150, Ranked 60 (§27.8). |
+| §21.1 Twelve Screens | Jury (7) removed. Verdict (8) becomes the sequential panel reveal. Daily gains a post-case analysis screen. |
+| §22 Flow Layer | Gains the panel reveal and the Daily analysis screen. |
+
+Subordinate to §17 as all prior sections are:
+
+> The panel evaluates advocacy and never resolves the case. It scores how well the argument was made, never whether the position was right.
