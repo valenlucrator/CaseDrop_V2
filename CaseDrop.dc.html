@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.min.js"></script><style>[style*="cursor: pointer"],[style*="cursor:pointer"]{transition:transform .14s cubic-bezier(.2,.7,.3,1),background-color .2s ease,border-color .2s ease,opacity .3s ease,color .2s ease}*{box-sizing:border-box}body{margin:0;background:#0F1011;font-family:'Instrument Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#4C8DF6;text-decoration:none}a:hover{color:#7BABF9}button{font-family:'Instrument Sans',system-ui,sans-serif}::-webkit-scrollbar{width:0;height:0}@keyframes cdFade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}@keyframes cdSheet{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes cdIn{from{opacity:0}to{opacity:1}}@keyframes cdPulse{0%,100%{opacity:.35}50%{opacity:1}}</style></helmet>
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 0 60px">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="position:relative;height:100%;display:flex;flex-direction:column;background:#0B0C0D;color:#ECEDEE;font-family:'Instrument Sans',system-ui">
+<div ref="{{ screenRef }}" style="flex:1;min-height:0;display:flex;flex-direction:column">
+
+<sc-if value="{{ sHome }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Home" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="font:700 21px/1 Archivo,sans-serif;letter-spacing:-0.035em">CaseDrop</div>
+<div onClick="{{ goProfile }}" style="width:34px;height:34px;border-radius:50%;background:#1D2126;border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font:600 11px 'JetBrains Mono',monospace;color:#A8AEB6;cursor:pointer">MH</div>
+</div>
+
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:24px 22px 22px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:#63B37F"></div><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#8A9099">TODAY'S CASE · JUDGMENT</div></div>
+<div style="font:800 38px/0.96 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">The Locked<br>Office</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099">Termination by email, a still-active badge, and a restricted records room.</div>
+<div style="display:flex;gap:22px;padding-top:4px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="display:flex;flex-direction:column;gap:5px;padding-top:14px"><div style="font:500 17px/1 'JetBrains Mono',monospace">New York</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">jurisdiction</div></div>
+<div style="display:flex;flex-direction:column;gap:5px;padding-top:14px"><div style="font:500 17px/1 'JetBrains Mono',monospace">17,402</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">submitted today</div></div>
+</div>
+<div onClick="{{ startDaily }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:54px;border-radius:13px;background:#4C8DF6;color:#08111C;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#3E7BDD;transform:scale(0.985)">PLAY DAILY</div>
+</div>
+
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:24px 22px 22px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:#4C8DF6"></div><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#8A9099">RANKED · ADVOCACY</div></div>
+<div style="font:800 30px/0.98 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">Make the case</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099">A side is assigned to you. Persuasion is scored, not belief.</div>
+<sc-if value="{{ ticketSide }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid rgba(211,160,91,.35);border-radius:9px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#D3A05B">SIDE-LOCK ACTIVE · {{ ticketSide }}</div>
+</sc-if>
+<div onClick="{{ startRanked }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:54px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE;transform:scale(0.985)">FIND MATCH</div>
+</div>
+
+<div style="display:flex;border-top:1px solid rgba(255,255,255,.07);padding-top:18px">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">DIVISION</div><div style="font:600 15px/1 Archivo,sans-serif">Division III</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">RATING</div><div style="font:500 15px/1 'JetBrains Mono',monospace">1,284</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">STREAK</div><div style="font:500 15px/1 'JetBrains Mono',monospace">31 days</div></div>
+</div>
+
+<div onClick="{{ goSunday }}" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#15171A;border:1px solid rgba(211,160,91,.28);border-radius:16px;cursor:pointer">
+<div style="display:flex;flex-direction:column;gap:7px"><div style="font:700 17px/1 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">Sunday Sitting</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">Five rulings · one sitting</div></div>
+<div style="font:500 12px/1 'JetBrains Mono',monospace;color:#D3A05B">02:14:37</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">YESTERDAY · CASE 0416</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 15px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase">Defend</div><div style="font:600 22px/1 'JetBrains Mono',monospace;color:#ECEDEE">61%</div></div>
+<div style="height:5px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:61%;height:100%;background:#565C63"></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 15px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase;color:#8A9099">Challenge</div><div style="font:600 22px/1 'JetBrains Mono',monospace;color:#8A9099">39%</div></div>
+<div style="height:5px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:39%;height:100%;background:#454B52"></div></div>
+</div>
+</div>
+
+<sc-if value="{{ hasGroup }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ openGroup }}" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:16px;margin-bottom:6px;cursor:pointer">
+<div style="display:flex;flex-direction:column;gap:7px"><div style="font:700 17px/1 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">The 2L Study Group</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">{{ groupRowMeta }}</div></div>
+<div style="font:400 15px/1 'Instrument Sans',system-ui;color:#7A828B">→</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sJury }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Jury" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">The jury</div>
+<div style="font:400 14px/1.45 'Instrument Sans',system-ui;color:#8A9099">Which advocate made the stronger case from the evidence available to them?</div>
+</div>
+
+<div ref="{{ pairRef }}" style="display:flex;flex-direction:column;gap:20px">
+<div style="background:#15171A;border:1px solid {{ jab }};border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px;opacity:{{ jao }}">
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">ARGUMENT A</div><div style="font:400 11px/1 'JetBrains Mono',monospace;color:#565C63">{{ jaName }}</div></div>
+<div style="font:400 16px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">{{ jaText }}</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ jaChips }}" as="c" hint-placeholder-count="2">
+<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">{{ c.label }}</div>
+</sc-for>
+</div>
+<div onClick="{{ voteA }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:{{ jabg }};color:{{ jafg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="transform:scale(0.985)">VOTE A</div>
+</div>
+
+<div style="background:#15171A;border:1px solid {{ jbb }};border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px;opacity:{{ jbo }}">
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">ARGUMENT B</div><div style="font:400 11px/1 'JetBrains Mono',monospace;color:#565C63">{{ jbName }}</div></div>
+<div style="font:400 16px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">{{ jbText }}</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ jbChips }}" as="c" hint-placeholder-count="2">
+<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">{{ c.label }}</div>
+</sc-for>
+</div>
+<div onClick="{{ voteB }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:{{ jbbg }};color:{{ jbfg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="transform:scale(0.985)">VOTE B</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;font:400 12px/1 'JetBrains Mono',monospace;color:{{ juryFootColor }};padding-bottom:8px">{{ juryFoot }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sRank }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Rank" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">CURRENT DIVISION</div>
+<div style="font:800 34px/1 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">Division III</div>
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:500 15px/1 'JetBrains Mono',monospace">1,284</div><div style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#7A828B">1,400 to promote</div></div>
+<div style="height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:64%;height:100%;background:#4C8DF6"></div></div>
+</div>
+
+<sc-if value="{{ hasGroup }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px">
+<div onClick="{{ scopeGlobal }}" style="flex:1;display:flex;align-items:center;justify-content:center;height:40px;border-radius:11px;border:1px solid {{ globalBorder }};color:{{ globalColor }};font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;cursor:pointer">GLOBAL</div>
+<div onClick="{{ scopeGroup }}" style="flex:1;display:flex;align-items:center;justify-content:center;height:40px;border-radius:11px;border:1px solid {{ groupBorder }};color:{{ groupColor }};font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;cursor:pointer">GROUP</div>
+</div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">{{ standingsLabel }}</div>
+<sc-for list="{{ standings }}" as="row" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:{{ row.pad }};margin:{{ row.margin }};background:{{ row.bg }};border-radius:11px">
+<div style="display:flex;gap:16px"><div style="width:18px;font:500 13px/1 'JetBrains Mono',monospace;color:{{ row.posColor }}">{{ row.pos }}</div><div style="font:{{ row.nameFont }} 15px/1 'Instrument Sans',system-ui;color:{{ row.color }}">{{ row.name }}</div></div>
+<div style="font:500 14px/1 'JetBrains Mono',monospace;color:{{ row.color }}">{{ row.rating }}</div>
+</div>
+</sc-for>
+<sc-if value="{{ scopeIsGroup }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 12.5px/1.5 'Instrument Sans',system-ui;color:#7A828B">Group standing is a filtered view of global rating. There is no separate group ladder.</div>
+</sc-if>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;padding-bottom:8px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">RECENT MATCHES</div>
+<sc-for list="{{ matches }}" as="m" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'Instrument Sans',system-ui">{{ m.case }}</div><div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#7A828B">{{ m.side }}</div></div>
+<div style="font:500 14px/1 'JetBrains Mono',monospace;color:{{ m.color }}">{{ m.delta }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sSunday }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Sunday" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="font:700 21px/1 Archivo,sans-serif;letter-spacing:-0.035em">CaseDrop</div>
+<div onClick="{{ goProfile }}" style="width:34px;height:34px;border-radius:50%;background:#1D2126;border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font:600 11px 'JetBrains Mono',monospace;color:#A8AEB6;cursor:pointer">MH</div>
+</div>
+<div style="background:#15171A;border:1px solid rgba(211,160,91,.35);border-radius:20px;padding:24px 22px 22px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:#D3A05B"></div><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#D3A05B">SUNDAY SITTING</div></div>
+<div style="font:500 12px/1 'JetBrains Mono',monospace;color:#D3A05B">02:14:37</div>
+</div>
+<div style="font:800 40px/0.96 Archivo,sans-serif;letter-spacing:-0.028em;text-transform:uppercase">En banc. Five issues. One sitting.</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099">One extended case each Sunday. Five separate rulings, argued in sequence, resolved by a full jury panel rather than a pair.</div>
+<div style="display:flex;flex-wrap:wrap;gap:0 26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="display:flex;flex-direction:column;gap:5px"><div style="font:500 17px/1 'JetBrains Mono',monospace">5</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">rulings</div></div>
+<div style="display:flex;flex-direction:column;gap:5px"><div style="font:500 17px/1 'JetBrains Mono',monospace">11</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">jurors</div></div>
+<div style="display:flex;flex-direction:column;gap:5px"><div style="font:500 17px/1 'JetBrains Mono',monospace">2,904</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">seats taken</div></div>
+</div>
+<div style="flex:none;display:flex;align-items:center;justify-content:center;height:54px;border-radius:13px;background:#D3A05B;color:#140F06;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#BE8E4C;transform:scale(0.985)">RESERVE SEAT</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:6px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">LAST WEEK</div>
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:7px"><div style="font:700 18px/1 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">The Vanishing Account</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">Sunday sitting · 5 rulings</div></div>
+<div style="font:500 12px/1 'JetBrains Mono',monospace;color:#63B37F">3 OF 5</div>
+</div>
+</div>
+<div style="font:400 12.5px/1.5 'Instrument Sans',system-ui;color:#565C63;text-align:center;padding:4px 20px 8px">Seats release at 09:00 local.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sProfile }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Profile" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;align-items:center;gap:14px">
+<div style="width:48px;height:48px;border-radius:50%;background:#1D2126;border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font:600 14px 'JetBrains Mono',monospace;color:#A8AEB6">MH</div>
+<div style="display:flex;flex-direction:column;gap:5px"><div style="font:700 22px/1 Archivo,sans-serif;letter-spacing:-0.02em">m.hale</div><div style="font:400 13px/1 'Instrument Sans',system-ui;color:#8A9099">Division III · joined Mar 2026</div></div>
+</div>
+<div style="display:flex;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);padding:16px 0">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 16px/1 'JetBrains Mono',monospace">1,284</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">RATING</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 16px/1 'JetBrains Mono',monospace">88–62</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">RANKED</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 16px/1 'JetBrains Mono',monospace">71%</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">JURY AGREEMENT</div></div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">READING PROFILE</div>
+<div style="display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;align-items:center;gap:14px"><div style="width:104px;font:400 13.5px/1 'Instrument Sans',system-ui;color:#D3D6D9">Issue Spotting</div><div style="flex:1;height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:92%;height:100%;background:#ECEDEE"></div></div><div style="width:26px;text-align:right;font:500 13px/1 'JetBrains Mono',monospace">92</div></div>
+<div style="display:flex;align-items:center;gap:14px"><div style="width:104px;font:400 13.5px/1 'Instrument Sans',system-ui;color:#D3D6D9">Evidence</div><div style="flex:1;height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:81%;height:100%;background:#ECEDEE"></div></div><div style="width:26px;text-align:right;font:500 13px/1 'JetBrains Mono',monospace">81</div></div>
+<div style="display:flex;align-items:center;gap:14px"><div style="width:104px;font:400 13.5px/1 'Instrument Sans',system-ui;color:#D3D6D9">Reasoning</div><div style="flex:1;height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:86%;height:100%;background:#ECEDEE"></div></div><div style="width:26px;text-align:right;font:500 13px/1 'JetBrains Mono',monospace">86</div></div>
+<div style="display:flex;align-items:center;gap:14px"><div style="width:104px;font:400 13.5px/1 'Instrument Sans',system-ui;color:#D3D6D9">Persuasion</div><div style="flex:1;height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:89%;height:100%;background:#ECEDEE"></div></div><div style="width:26px;text-align:right;font:500 13px/1 'JetBrains Mono',monospace">89</div></div>
+<div style="display:flex;align-items:center;gap:14px"><div style="width:104px;font:400 13.5px/1 'Instrument Sans',system-ui;color:#D3D6D9">Judgment</div><div style="flex:1;height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:67%;height:100%;background:#565C63"></div></div><div style="width:26px;text-align:right;font:500 13px/1 'JetBrains Mono',monospace;color:#8A9099">67</div></div>
+</div>
+</div>
+
+<div onClick="{{ openTicket }}" style="background:#15171A;border:1px solid rgba(211,160,91,.28);border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+<div style="display:flex;flex-direction:column;gap:7px"><div style="font:700 17px/1 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">Side-Lock Tickets</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">Guarantee your side, nothing else</div></div>
+<div style="font:500 12px/1 'JetBrains Mono',monospace;color:#D3A05B">{{ ticketRowLabel }}</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">GROUPS</div>
+<sc-if value="{{ hasGroup }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div onClick="{{ openGroup }}" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'Instrument Sans',system-ui">The 2L Study Group</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">Primary · 38 members</div></div>
+<div style="font:400 15px/1 'Instrument Sans',system-ui;color:#7A828B">→</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'Instrument Sans',system-ui">Fordham Evidence 2026</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">104 members</div></div>
+<div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#565C63">2 OF 3</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ noGroup }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">You belong to no groups. A group is joined with an invite code. There is no directory.</div>
+</sc-if>
+<div style="display:flex;gap:10px">
+<div style="flex:1;display:flex;align-items:center;justify-content:center;height:46px;border-radius:11px;border:1px solid rgba(255,255,255,.14);font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#ECEDEE;cursor:pointer" style-active="background:#15171A">JOIN WITH CODE</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;height:46px;border-radius:11px;border:1px solid rgba(255,255,255,.14);font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#ECEDEE;cursor:pointer" style-active="background:#15171A">CREATE GROUP</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;padding-bottom:6px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">RECENT CASES</div>
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 14.5px/1 'Instrument Sans',system-ui">{{ h.case }}</div><div style="font:500 12.5px/1 'JetBrains Mono',monospace;color:{{ h.color }}">{{ h.meta }}</div></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sAssign }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Assigning counsel" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">MATCH FOUND · OPPONENT 1,291</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px">
+<sc-if value="{{ assigning }}" hint-placeholder-val="{{ true }}">
+<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase;color:#4E545B;animation:cdPulse 1.1s ease-in-out infinite">Assigning counsel…</div>
+</sc-if>
+<sc-if value="{{ sideRevealed }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:20px;animation:cdFade .4s ease both">
+<div style="font:800 52px/0.94 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">You are<br>{{ side }}</div>
+<div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">This is your side. Make the strongest case you can.</div>
+<div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#7A828B">{{ assignNote }}</div>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{ sideRevealed }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ toPrompt }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">RECEIVE CASE</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sPrompt }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Case Prompt" style="flex:1;overflow:auto;padding:62px 22px 0;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:46px">
+<div onClick="{{ goHome }}" style="font:400 18px/1 'Instrument Sans',system-ui;color:#7A828B;cursor:pointer">✕</div>
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">CASE 0417</div>
+</div>
+<div style="font:800 52px/0.94 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">The<br>Locked<br>Office</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:34px 0">
+<div style="padding:7px 12px;border:1px solid rgba(255,255,255,.1);border-radius:8px;font:500 11.5px/1 'Instrument Sans',system-ui;color:#A8AEB6">{{ modeChip }}</div>
+<div style="padding:7px 12px;border:1px solid rgba(255,255,255,.1);border-radius:8px;font:500 11.5px/1 'Instrument Sans',system-ui;color:#A8AEB6">New York</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.07)">
+<div style="font:400 17px/1.55 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">Maya Chen was terminated from a financial consulting firm at 17:03 by email and told not to access company offices or systems again. Maya says she did not see the email until later that night.</div>
+<div style="font:400 17px/1.55 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">At 20:14, she entered the office using her still-active employee badge and accessed a restricted records room. She says she returned only to retrieve personal belongings.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:26px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">JURISDICTION RULE</div>
+<div style="font:400 15.5px/1.6 'Instrument Sans',system-ui;color:#A8AEB6;text-wrap:pretty">A person is guilty of trespass when that person <span onClick="{{ glossKnowingly }}" style="color:#ECEDEE;border-bottom:1px dotted rgba(255,255,255,.3);cursor:pointer;white-space:nowrap">knowingly</span> enters or remains unlawfully in a building. A person enters or remains unlawfully when that person is not <span onClick="{{ glossLicensed }}" style="color:#ECEDEE;border-bottom:1px dotted rgba(255,255,255,.3);cursor:pointer;white-space:nowrap">licensed or privileged</span> to do so. Where entry is open to the public, permission may be withdrawn by <span onClick="{{ glossNotice }}" style="color:#ECEDEE;border-bottom:1px dotted rgba(255,255,255,.3);cursor:pointer;white-space:nowrap">lawful order</span> personally communicated.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:30px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">YOUR TASK</div>
+<div style="font:600 22px/1.3 Archivo,sans-serif;letter-spacing:-0.015em">{{ taskLine }}</div>
+</div>
+<div style="flex:1;min-height:34px"></div>
+<div style="padding:0 0 40px;display:flex;flex-direction:column;gap:14px">
+<div onClick="{{ toEvidence }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE;transform:scale(0.985)">OPEN CASE FILE</div>
+<div style="font:400 12px/1.4 'Instrument Sans',system-ui;color:#565C63;text-align:center">{{ promptFoot }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sEvidence }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Evidence" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">Evidence</div>
+<div style="font:400 13.5px/1.4 'Instrument Sans',system-ui;color:#8A9099">Choose 2 of 5. The rest stay sealed.</div>
+</div>
+<div style="font:500 13px/1 'JetBrains Mono',monospace;color:{{ evLeftColor }};flex:none">{{ evLeft }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ evidence }}" as="e" hint-placeholder-count="5">
+<div onClick="{{ e.onOpen }}" style="background:#15171A;border:1px solid {{ e.border }};border-radius:14px;padding:16px 17px;display:flex;flex-direction:column;gap:9px;opacity:{{ e.opacity }};cursor:pointer" style-active="transform:scale(0.99)">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<div style="font:600 14.5px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase">{{ e.title }}</div>
+<div style="width:15px;height:15px;border-radius:4px;border:1px solid {{ e.border }};background:{{ e.fill }};flex:none"></div>
+</div>
+<div style="font:400 13px/1.45 'Instrument Sans',system-ui;color:#8A9099">{{ e.kind }}</div>
+<sc-if value="{{ e.isOpen }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:5px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">{{ e.body }}</div>
+</sc-if>
+<sc-if value="{{ e.hasTerm }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9">Policy classes this as <span onClick="{{ glossHandbook }}" style="color:#ECEDEE;border-bottom:1px dotted rgba(255,255,255,.3);cursor:pointer;white-space:nowrap">constructive notice</span>.</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="flex:1;min-height:6px"></div>
+<div style="padding:14px 0 26px;background:#0B0C0D;position:sticky;bottom:0">
+<div onClick="{{ toDecision }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:{{ evCtaBg }};color:{{ evCtaFg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer">CONTINUE</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sDecision }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Decision" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B;margin-bottom:44px">THE LOCKED OFFICE</div>
+<div style="font:800 40px/0.98 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">{{ decisionTitle }}</div>
+<div style="padding-top:16px;font:400 14px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ decisionSub }}</div>
+<div style="flex:1;min-height:30px"></div>
+<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+<sc-for list="{{ options }}" as="o" hint-placeholder-count="2">
+<div onClick="{{ o.onSelect }}" style="border:1px solid {{ o.border }};background:{{ o.bg }};border-radius:16px;padding:22px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;cursor:pointer" style-active="transform:scale(0.99)">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">{{ o.tag }}</div>
+<div style="font:700 20px/1.1 Archivo,sans-serif;letter-spacing:-0.015em;text-transform:uppercase">{{ o.title }}</div>
+<div style="font:400 13.5px/1.45 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ o.body }}</div>
+</div>
+<div style="width:11px;height:11px;border-radius:50%;background:{{ o.dot }};flex:none;margin-top:4px"></div>
+</div>
+</sc-for>
+</div>
+<div style="font:400 12.5px/1.4 'Instrument Sans',system-ui;color:#7A828B;text-align:center;margin-bottom:16px">Your decision cannot be changed after submission.</div>
+<div onClick="{{ toArgument }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:60px;border-radius:14px;background:{{ lockBg }};color:{{ lockFg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="transform:scale(0.99)">LOCK DECISION</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sArgument }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Argument" style="flex:1;overflow:auto;padding:62px 22px 16px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">{{ argTitle }}</div>
+<div style="font:400 14px/1.45 'Instrument Sans',system-ui;color:#8A9099">Give the strongest reason for your decision. Maximum 60 words.</div>
+</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ openedTitles }}" as="t" hint-placeholder-count="2">
+<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">{{ t.upper }}</div>
+</sc-for>
+</div>
+<textarea value="{{ arg }}" onChange="{{ onArg }}" spellcheck="false" placeholder="Write the argument." style="width:100%;height:190px;resize:none;background:#15171A;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px;color:#ECEDEE;font:400 16.5px/1.5 'Instrument Sans',system-ui;outline:none" style-focus="border-color:#4C8DF6"></textarea>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">Position: {{ lockedLabel }}</div>
+<div style="font:500 12.5px/1 'JetBrains Mono',monospace;color:{{ wcColor }};flex:none">{{ words }} / 60</div>
+</div>
+<div onClick="{{ fileArg }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:{{ argCtaBg }};color:{{ argCtaFg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="transform:scale(0.99)">{{ fileLabel }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sLocked }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Submission Locked" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:30px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#63B37F">FILED 20:41:07</div>
+<div style="font:800 40px/1 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">Submission locked</div>
+<div style="font:400 14.5px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ lockedBody }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;padding-top:28px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">OVERALL CASE OPINION</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 16px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase">Defend</div><div style="font:600 22px/1 'JetBrains Mono',monospace;color:#ECEDEE">62%</div></div>
+<div style="height:5px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:62%;height:100%;background:#565C63"></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 16px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase;color:#8A9099">Challenge</div><div style="font:600 22px/1 'JetBrains Mono',monospace;color:#8A9099">38%</div></div>
+<div style="height:5px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:38%;height:100%;background:#454B52"></div></div>
+</div>
+<div style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#7A828B">17,402 submitted</div>
+</div>
+<div style="flex:1;min-height:10px"></div>
+<div onClick="{{ toVerdict }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">CONTINUE TO VERDICT</div>
+<div style="font:400 12px/1.4 'Instrument Sans',system-ui;color:#565C63;text-align:center">{{ lockedFoot }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sVerdictRanked }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Verdict" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#63B37F">JURY FINDS FOR YOU</div>
+<div style="display:flex;align-items:baseline;gap:14px">
+<div style="font:600 68px/0.9 'JetBrains Mono',monospace;letter-spacing:-0.04em">4–3</div>
+<div style="font:400 15px/1 'JetBrains Mono',monospace;color:#7A828B">jury vote</div>
+</div>
+<div style="display:flex;gap:3px;height:6px"><div style="flex:4;background:#63B37F;border-radius:3px"></div><div style="flex:3;background:#1B1E21;border-radius:3px"></div></div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="font:400 11px/1 'Instrument Sans',system-ui;color:#7A828B">RATING</div><div style="font:500 20px/1 'JetBrains Mono',monospace">1,266 → 1,284</div></div>
+<div style="font:600 20px/1 'JetBrains Mono',monospace;color:#63B37F">+18</div>
+</div>
+<div style="display:flex;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);padding:16px 0">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">{{ side }}</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">YOUR SIDE</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">1,291</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">OPPONENT</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">+120</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">XP</div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:#15171A;border:1px solid rgba(99,179,127,.3);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#63B37F">YOU OPENED</div></div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ openedTitles }}" as="t" hint-placeholder-count="2">
+<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A8AEB6">{{ t.upper }}</div>
+</sc-for>
+</div>
+</div>
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">OPPONENT OPENED · {{ oppSide }}</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">IT DEACTIVATION TICKET</div>
+<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">MANAGER MESSAGES</div>
+</div>
+</div>
+</div>
+<div style="flex:1;min-height:10px"></div>
+<div onClick="{{ toLearn }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">REVIEW CASE</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sVerdictDaily }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Verdict Daily" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:12px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">YOU CHOSE</div>
+<div style="font:800 40px/1 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">{{ yourPick }}</div>
+<div style="font:500 16px/1 'Instrument Sans',system-ui;color:{{ minorityColor }}">You are in the {{ minorityPct }}.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">COMMUNITY</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 16px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase;color:{{ defendColor }}">Defend {{ defendTag }}</div><div style="font:600 30px/1 'JetBrains Mono',monospace;color:{{ defendColor }}">62%</div></div>
+<div style="height:6px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:62%;height:100%;background:{{ defendBar }}"></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 16px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase;color:{{ challengeColor }}">Challenge {{ challengeTag }}</div><div style="font:600 30px/1 'JetBrains Mono',monospace;color:{{ challengeColor }}">38%</div></div>
+<div style="height:6px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:38%;height:100%;background:{{ challengeBar }}"></div></div>
+</div>
+<div style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#7A828B">17,402 decisions</div>
+</div>
+<sc-if value="{{ hasGroup }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ openGroup }}" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:16px;cursor:pointer">
+<div style="display:flex;flex-direction:column;gap:7px"><div style="font:700 17px/1 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">The 2L Study Group</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">{{ groupRowMeta }}</div></div>
+<div style="font:400 15px/1 'Instrument Sans',system-ui;color:#7A828B">→</div>
+</div>
+</sc-if>
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:11px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">MOST-READ JUSTIFICATION · DEFEND</div>
+<div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">“The badge still worked and the deactivation was scheduled for the morning. An employer that leaves access operational has not personally communicated anything.”</div>
+</div>
+<div style="flex:1;min-height:10px"></div>
+<div onClick="{{ toLearn }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">REVIEW CASE</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sLearn }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Learn Review" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">Why both sides were defensible</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">DEFEND</div>
+<div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">Revocation requires communication that actually reaches the person. An unread email sent at 17:03, paired with a badge the employer left live and a guard who admitted her, supports the view that permission had not yet been withdrawn in any operative sense.</div>
+</div>
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">CHALLENGE</div>
+<div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">Termination and an express instruction not to return were both sent before entry. Entering a restricted records room at 20:14 is not explained by retrieving belongings, and a person who is told to stay out bears some duty to read what an employer sends.</div>
+</div>
+<div style="background:#15171A;border:1px solid rgba(211,160,91,.28);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#D3A05B">STRONGER REASONING</div>
+<div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">The strongest submissions on both sides separated the entry from the records room, and treated them as two questions rather than one.</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">TERMS YOU OPENED</div>
+<sc-for list="{{ openedTerms }}" as="t" hint-placeholder-count="1">
+<div onClick="{{ t.onOpen }}" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer"><div style="font:500 14.5px/1 'Instrument Sans',system-ui">{{ t.term }}</div><div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#565C63">OPENED</div></div>
+</sc-for>
+<sc-if value="{{ noOpenedTerms }}" hint-placeholder-val="{{ true }}">
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#565C63">None.</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">TERMS YOU DID NOT OPEN</div>
+<sc-for list="{{ unopenedTerms }}" as="t" hint-placeholder-count="3">
+<div onClick="{{ t.onOpen }}" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer"><div style="font:500 14.5px/1 'Instrument Sans',system-ui">{{ t.term }}</div><div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#4C8DF6">READ</div></div>
+</sc-for>
+</div>
+<div style="flex:1;min-height:10px"></div>
+<div onClick="{{ finish }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">DONE</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sGroup }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Group Detail" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div onClick="{{ goHome }}" style="font:400 18px/1 'Instrument Sans',system-ui;color:#7A828B;cursor:pointer">✕</div>
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">CODE 4KJ9P2XM</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:800 34px/1 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">The 2L Study Group</div>
+<div style="font:400 13px/1 'Instrument Sans',system-ui;color:#8A9099">38 members</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;padding-top:26px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">TODAY · CASE 0417</div>
+<sc-if value="{{ groupSplitShown }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 16px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase">Defend</div><div style="font:600 22px/1 'JetBrains Mono',monospace">59%</div></div>
+<div style="height:5px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:59%;height:100%;background:#565C63"></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:600 16px/1 Archivo,sans-serif;letter-spacing:.02em;text-transform:uppercase;color:#8A9099">Challenge</div><div style="font:600 22px/1 'JetBrains Mono',monospace;color:#8A9099">41%</div></div>
+<div style="height:5px;border-radius:3px;background:#1B1E21;overflow:hidden"><div style="width:41%;height:100%;background:#454B52"></div></div>
+</div>
+<div style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#7A828B">22 of 38 submitted</div>
+</div>
+</sc-if>
+<sc-if value="{{ groupSplitHidden }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font:500 15px/1 'Instrument Sans',system-ui;color:#8A9099">3 of 38 submitted</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#565C63">A split is shown at five submissions.</div>
+</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">MEMBER STANDINGS</div>
+<sc-for list="{{ groupStandings }}" as="row" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:{{ row.pad }};margin:{{ row.margin }};background:{{ row.bg }};border-radius:11px">
+<div style="display:flex;gap:16px"><div style="width:18px;font:500 13px/1 'JetBrains Mono',monospace;color:{{ row.posColor }}">{{ row.pos }}</div><div style="font:{{ row.nameFont }} 15px/1 'Instrument Sans',system-ui;color:{{ row.color }}">{{ row.name }}</div></div>
+<div style="font:500 14px/1 'JetBrains Mono',monospace;color:{{ row.color }}">{{ row.rating }}</div>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ groupSplitShown }}" hint-placeholder-val="{{ true }}">
+<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">TOP ARGUMENT TODAY</div><div style="font:400 11px/1 'JetBrains Mono',monospace;color:#565C63">A. Koval · 1,352</div></div>
+<div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">“Two entries, two questions. The lobby was open to her at 20:14; the records room never was. Treating them as one act is what makes this case look easy.”</div>
+</div>
+</sc-if>
+<div style="flex:1;min-height:10px"></div>
+<div onClick="{{ goHome }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;border:1px solid rgba(210,102,95,.35);color:#D2665F;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#15171A">LEAVE GROUP</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ navVisible }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:4px;padding:14px 26px 30px;background:#0B0C0D;border-top:1px solid rgba(255,255,255,0.07)">
+<div onClick="{{ n0 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
+<svg width="19" height="19" viewBox="0 0 20 20"><rect x="2.5" y="2.5" width="15" height="15" rx="4.5" fill="none" stroke="{{ c0 }}" stroke-width="1.6"></rect></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c0 }};opacity:{{ o0 }}">Home</div>
+</div>
+<div onClick="{{ n1 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
+<svg width="19" height="19" viewBox="0 0 20 20"><rect x="2.4" y="4" width="6" height="12" rx="1.6" fill="none" stroke="{{ c1 }}" stroke-width="1.6"></rect><rect x="11.6" y="4" width="6" height="12" rx="1.6" fill="none" stroke="{{ c1 }}" stroke-width="1.6"></rect></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c1 }};opacity:{{ o1 }}">Jury</div>
+</div>
+<div onClick="{{ n2 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
+<svg width="19" height="19" viewBox="0 0 20 20"><path d="M3 16.5 V12 M10 16.5 V7 M17 16.5 V3" fill="none" stroke="{{ c2 }}" stroke-width="1.7" stroke-linecap="round"></path></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c2 }};opacity:{{ o2 }}">Rank</div>
+</div>
+<div onClick="{{ n3 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
+<svg width="19" height="19" viewBox="0 0 20 20"><path d="M10 2.6 L17.4 10 L10 17.4 L2.6 10 Z" fill="none" stroke="{{ c3 }}" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c3 }};opacity:{{ o3 }}">Sunday</div>
+</div>
+<div onClick="{{ n4 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
+<svg width="19" height="19" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.3" fill="none" stroke="{{ c4 }}" stroke-width="1.6"></circle></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c4 }};opacity:{{ o4 }}">Profile</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ glossOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:20">
+<div onClick="{{ closeGloss }}" style="position:absolute;inset:0;background:rgba(0,0,0,.62);animation:cdIn .18s ease both"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;max-height:560px;overflow-y:auto;background:#15171A;border-top:1px solid rgba(255,255,255,.07);border-radius:24px 24px 0 0;padding:24px 22px 40px;display:flex;flex-direction:column;gap:22px;animation:cdSheet .22s ease both">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font:700 24px/1.05 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">{{ glossTerm }}</div>
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">{{ glossCategory }}</div>
+</div>
+<div onClick="{{ closeGloss }}" style="flex:none;font:400 18px/1 'Instrument Sans',system-ui;color:#7A828B;cursor:pointer">✕</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">MEANING</div>
+<div style="font:400 15.5px/1.55 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">{{ glossMeaning }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">HEARD AS</div>
+<div style="font:400 15.5px/1.55 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ glossHeardAs }}</div>
+</div>
+<sc-if value="{{ glossHasRelated }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">RELATED</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ glossRelated }}" as="r" hint-placeholder-count="2">
+<div onClick="{{ r.onOpen }}" style="padding:8px 12px;border:1px solid rgba(255,255,255,.14);border-radius:8px;font:500 11.5px/1 'Instrument Sans',system-ui;color:#A8AEB6;cursor:pointer" style-active="background:#1D2126">{{ r.term }}</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ glossCapped }}" hint-placeholder-val="{{ false }}">
+<div style="padding-top:18px;border-top:1px solid rgba(255,255,255,.07);font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#565C63">DEPTH LIMIT REACHED · RETURN TO THE CASE</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ticketOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:20">
+<div onClick="{{ closeTicket }}" style="position:absolute;inset:0;background:rgba(0,0,0,.62);animation:cdIn .18s ease both"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#15171A;border-top:1px solid rgba(255,255,255,.07);border-radius:24px 24px 0 0;padding:24px 22px 40px;display:flex;flex-direction:column;gap:20px;animation:cdSheet .22s ease both">
+<div style="display:flex;align-items:flex-start;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:#D3A05B"></div><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#D3A05B">SIDE-LOCK TICKETS</div></div>
+<div onClick="{{ closeTicket }}" style="font:400 18px/1 'Instrument Sans',system-ui;color:#7A828B;cursor:pointer">✕</div>
+</div>
+<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">{{ ticketHeadline }}</div>
+<div style="font:400 14.5px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ ticketBody }}</div>
+<sc-if value="{{ subscriber }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:10px">
+<div onClick="{{ pickDefend }}" style="flex:1;display:flex;align-items:center;justify-content:center;height:46px;border-radius:11px;border:1px solid {{ defendLockBorder }};color:{{ defendLockColor }};font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;cursor:pointer">DEFEND</div>
+<div onClick="{{ pickChallenge }}" style="flex:1;display:flex;align-items:center;justify-content:center;height:46px;border-radius:11px;border:1px solid {{ challengeLockBorder }};color:{{ challengeLockColor }};font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;cursor:pointer">CHALLENGE</div>
+</div>
+<div onClick="{{ useTicket }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:54px;border-radius:13px;background:#D3A05B;color:#140F06;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#BE8E4C">LOCK SIDE FOR NEXT MATCH</div>
+<div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#565C63;text-align:center">LOCK OCCURS BEFORE THE CASE IS REVEALED</div>
+</div>
+</sc-if>
+<sc-if value="{{ notSubscriber }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);padding:16px 0">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">TBD</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">PER MONTH</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">No</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">AFFECTS RATING</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">No</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">AFFECTS EVIDENCE</div></div>
+</div>
+<div style="flex:none;display:flex;align-items:center;justify-content:center;height:54px;border-radius:13px;border:1px solid rgba(211,160,91,.5);color:#D3A05B;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#1D2126">VIEW SUBSCRIPTION</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:460,&quot;height&quot;:960},&quot;hasGroup&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;groupLowPopulation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;subscriber&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'home', mode: 'ranked', side: 'CHALLENGE', sideRevealed: false,
+    opened: [], choice: null, arg: '', gloss: null, glossDepth: 0,
+    scope: 'GLOBAL', juryVote: null, ticketOpen: false, ticketPick: 'CHALLENGE',
+    ticketSide: null, termsOpened: [], pair: 0
+  };
+
+  screenRef = React.createRef();
+  pairRef = React.createRef();
+
+  JURY_PAIRS = [
+    {
+      a: { name: 'R. Oyelaran · 1,341', text: '“Consent was withdrawn in writing before entry. The written revocation is the operative fact, and the guard\u2019s silence cannot restore a permission the employer had already removed.”', chips: ['TERMINATION EMAIL', 'BADGE ACCESS LOG'] },
+      b: { name: 'D. Ferraro · 1,298', text: '“Access was never actually withdrawn. The badge worked, deactivation was scheduled for the next morning, and building security admitted her without objection.”', chips: ['IT DEACTIVATION TICKET', 'GUARD STATEMENT'] }
+    },
+    {
+      a: { name: 'S. Nwosu · 1,188', text: '“The records room is the only room that matters. Whatever she believed about the lobby, no version of her permission reached a restricted file room at 20:19.”', chips: ['BADGE ACCESS LOG', 'HANDBOOK §7.2'] },
+      b: { name: 'K. Abara · 1,618', text: '“Her manager told her to collect her things whenever. That instruction was never retracted, and it is the only one she had actually read when she walked in.”', chips: ['MANAGER MESSAGES', 'LOBBY CAMERA STILL'] }
+    },
+    {
+      a: { name: 'T. Lindqvist · 1,552', text: '“Nothing was taken and two folders sat out of order. That is the evidentiary weight of the state\u2019s case: an inventory that proves the room was entered and nothing else.”', chips: ['RECORDS ROOM AUDIT', 'LOBBY CAMERA STILL'] },
+      b: { name: 'A. Koval · 1,352', text: '“Trespass does not require theft. The offence completes at the threshold, and the audit only tells us she was disciplined about what she touched.”', chips: ['HANDBOOK §7.2', 'BADGE ACCESS LOG'] }
+    }
+  ];
+
+  GLOSS = {
+    knowingly: {
+      term: 'Knowingly', category: 'LEGAL CONCEPT',
+      meaning: 'A state of mind. The person is aware of the nature of their conduct or of a circumstance that makes it unlawful. It is weaker than intent to cause harm and stronger than accident. A person who does not know a fact cannot act knowingly with respect to it.',
+      heardAs: '“He knew the door was not his to open.”',
+      related: ['licensed', 'notice']
+    },
+    licensed: {
+      term: 'Licensed or Privileged', category: 'LEGAL CONCEPT',
+      meaning: 'Permission to be somewhere. A license is consent given by a person with authority over the place. A privilege arises by law regardless of consent. Either can be limited to certain areas, certain hours, or certain purposes, and either can be withdrawn.',
+      heardAs: '“She had permission to be in the lobby, not in the vault.”',
+      related: ['knowingly', 'notice', 'constructive-notice']
+    },
+    notice: {
+      term: 'Lawful Order', category: 'PROCEDURE',
+      meaning: 'A direction from a person with authority to give it, communicated to the person it binds. Authority and communication are separate requirements. An order that never reaches its subject may still be lawful, but it has not yet been communicated.',
+      heardAs: '“You were told to leave and you stayed.”',
+      related: ['licensed', 'constructive-notice']
+    },
+    'constructive-notice': {
+      term: 'Constructive Notice', category: 'LEGAL CONCEPT',
+      meaning: 'Knowledge the law treats a person as having, whether or not they actually had it. It arises where information was made available in the ordinary way and a reasonable person in that position would have received it. It substitutes for proof of actual awareness.',
+      heardAs: '“It was in the handbook she signed for.”',
+      related: ['notice', 'knowingly']
+    }
+  };
+
+  EVIDENCE = {
+    ranked: [
+      { id: 'E1', kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
+      { id: 'E2', kind: 'Turnstile and door reads for the evening.', title: 'Badge Access Log', body: 'Lobby turnstile 20:14. Fourth-floor door 20:17. Records room 20:19. Exit 20:36. Badge credential active throughout.' },
+      { id: 'E5', kind: 'After-hours and records room rules.', title: 'Employee Handbook §7.2', body: 'After-hours access is limited to work assigned in advance. Records room entry requires a logged business purpose. Employees are responsible for company notices sent to their work address.', term: true },
+      { id: 'E7', kind: 'From the guard on duty that night.', title: 'Security Guard Statement', body: 'Guard says he recognised her, said good evening, and raised no objection. He had received no list of departed employees that day.' },
+      { id: 'E9', kind: 'Lobby camera frame at the time of entry.', title: 'Lobby Camera Still', body: 'Frame at 20:14 shows her carrying an empty personal box and a coat. No bag large enough for files.' }
+    ],
+    daily: [
+      { id: 'E1', kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
+      { id: 'E3', kind: 'The badge and account revocation task.', title: 'IT Deactivation Ticket', body: 'Opened 17:11, priority normal, scheduled for 09:00 the following morning. Badge and account deactivation grouped in one task.' },
+      { id: 'E4', kind: 'Between the employee and her manager.', title: 'Manager Messages', body: 'At 16:52 the manager wrote: grab your things whenever, no rush. Sent nine minutes before the termination email. No later message retracts it.' },
+      { id: 'E6', kind: 'Inventory taken the next morning.', title: 'Records Room Audit', body: 'Inventory shows nothing missing. Two folders were out of sequence on the shelf nearest the door.' },
+      { id: 'E8', kind: 'Work mail sessions on her own phone.', title: 'Personal Phone Records', body: 'Work mail application opened 23:41. No earlier session that evening. Push notifications for the work account were disabled 6 March.' }
+    ]
+  };
+
+  OPTIONS = {
+    ranked: [
+      { key: 'a', tag: 'THEORY A', title: 'Revocation was effective when sent', body: 'The employer withdrew permission at 17:03. Whether she read it goes to sympathy, not to authority.' },
+      { key: 'b', tag: 'THEORY B', title: 'The records room is the whole case', body: 'Concede the lobby entry. No permission ever extended to a restricted room at 20:19.' }
+    ],
+    daily: [
+      { key: 'a', tag: 'DEFEND', title: 'No unlawful entry', body: 'Access remained authorised at 20:14. Nothing had actually reached her, and the badge still worked.' },
+      { key: 'b', tag: 'CHALLENGE', title: 'The entry was unlawful', body: 'She was told not to return before she came back, and a restricted records room was never hers to enter.' }
+    ]
+  };
+
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._nt); clearTimeout(this._jt); }
+
+  anim(el, keyframes, options) {
+    const M = window.Motion;
+    if (!el || !M || !M.animate) return null;
+    try { return M.animate(el, keyframes, options); } catch (e) { return null; }
+  }
+
+  navigate(screen) {
+    if (this.state.screen === screen || this._navving) return;
+    const el = this.screenRef.current;
+    this._navving = true;
+    const commit = () => {
+      if (!this._navving) return;
+      this._navving = false;
+      clearTimeout(this._nt);
+      this.setState({ screen });
+    };
+    const a = this.anim(el, { opacity: [1, 0], transform: ['translateY(0px)', 'translateY(-10px)'] }, { duration: 0.17, easing: [0.4, 0, 1, 1] });
+    if (a && a.finished) a.finished.then(commit, commit);
+    this._nt = setTimeout(commit, a ? 300 : 170);
+  }
+
+  reveal(el) {
+    if (!el) return;
+    el.style.opacity = '';
+    el.style.transform = '';
+  }
+
+  componentDidMount() { this._lastScreen = this.state.screen; this._lastPair = this.state.pair; }
+
+  componentDidUpdate() {
+    const el = this.screenRef.current;
+    if (this._lastScreen !== this.state.screen) {
+      this._lastScreen = this.state.screen;
+      this.reveal(el);
+      this.anim(el,
+        { opacity: [0, 1], transform: ['translateY(14px)', 'translateY(0px)'] },
+        { duration: 0.38, easing: [0.16, 0.9, 0.3, 1] });
+    } else if (el && !this._navving && el.style.opacity === '0') {
+      this.reveal(el);
+    }
+    const pel = this.pairRef.current;
+    if (this._lastPair !== this.state.pair) {
+      this._lastPair = this.state.pair;
+      this.reveal(pel);
+      this.anim(pel,
+        { opacity: [0, 1], transform: ['translateY(18px) scale(0.985)', 'translateY(0px) scale(1)'] },
+        { duration: 0.42, easing: [0.16, 0.9, 0.3, 1] });
+    }
+  }
+
+  vote = (v) => () => {
+    if (this.state.juryVote) return;
+    this.setState({ juryVote: v });
+    clearTimeout(this._jt);
+    this._jt = setTimeout(() => {
+      const el = this.pairRef.current;
+      const next = () => this.setState(s => ({ pair: (s.pair + 1) % this.JURY_PAIRS.length, juryVote: null }));
+      const a = this.anim(el, { opacity: [1, 0], transform: ['translateY(0px)', 'translateY(-14px)'] }, { duration: 0.2, easing: [0.4, 0, 1, 1] });
+      if (a && a.finished) a.finished.then(next, next); else setTimeout(next, 200);
+    }, 1250);
+  };
+
+  go = (screen) => () => this.navigate(screen);
+
+  startRanked = () => {
+    const locked = this.state.ticketSide;
+    this.setState({ mode: 'ranked', sideRevealed: false, opened: [], choice: null, arg: '', termsOpened: [] });
+    this.navigate('assign');
+    clearTimeout(this._t);
+    this._t = setTimeout(() => {
+      const side = locked || (Math.random() < 0.5 ? 'DEFEND' : 'CHALLENGE');
+      this.setState({ side, sideRevealed: true });
+    }, 1700);
+  };
+
+  startDaily = () => {
+    this.setState({ mode: 'daily', opened: [], choice: null, arg: '', termsOpened: [] });
+    this.navigate('prompt');
+  };
+
+  toggleEvidence = (id) => () => {
+    const o = this.state.opened;
+    const i = o.indexOf(id);
+    if (i !== -1) return this.setState({ opened: o.filter(x => x !== id) });
+    if (o.length >= 2) return;
+    this.setState({ opened: o.concat([id]) });
+  };
+
+  select = (key) => () => this.setState({ choice: key });
+
+  openGloss = (id) => () => this.setState(s => ({
+    gloss: id,
+    glossDepth: s.gloss ? s.glossDepth + 1 : 1,
+    termsOpened: s.termsOpened.indexOf(id) === -1 ? s.termsOpened.concat([id]) : s.termsOpened
+  }));
+
+  renderVals() {
+    const s = this.state;
+    const ranked = s.mode === 'ranked';
+    const hasGroup = this.props.hasGroup ?? true;
+    const lowPop = this.props.groupLowPopulation ?? false;
+    const subscriber = this.props.subscriber ?? true;
+    const hub = ['home', 'jury', 'rank', 'sunday', 'profile'];
+    const words = s.arg.trim() ? s.arg.trim().split(/\s+/).length : 0;
+    const over = words > 60;
+    const bundle = this.EVIDENCE[s.mode];
+    const openedFull = bundle.filter(e => s.opened.indexOf(e.id) !== -1);
+    const g = s.gloss ? this.GLOSS[s.gloss] : null;
+    const capped = s.glossDepth >= 3;
+    const allTerms = ['knowingly', 'licensed', 'notice', 'constructive-notice'];
+    const scopeGroup = s.scope === 'GROUP' && hasGroup;
+    const pair = this.JURY_PAIRS[s.pair];
+    const evLeft = 2 - s.opened.length;
+    const ready = evLeft === 0;
+
+    const rows = (list) => list.map(r => ({
+      pos: r.pos, name: r.name, rating: r.rating,
+      color: r.me ? '#ECEDEE' : '#8A9099',
+      posColor: r.me ? '#ECEDEE' : '#7A828B',
+      nameFont: r.me ? '600' : '400',
+      bg: r.me ? '#15171A' : 'transparent',
+      pad: r.me ? '12px 14px' : '0',
+      margin: r.me ? '0 -14px' : '0'
+    }));
+    const globalList = [
+      { pos: '01', name: 'K. Abara', rating: '1,618' }, { pos: '02', name: 'T. Lindqvist', rating: '1,552' },
+      { pos: '03', name: 'A. Koval', rating: '1,352' }, { pos: '04', name: 'D. Ferraro', rating: '1,298' },
+      { pos: '05', name: 'You', rating: '1,284', me: true }
+    ];
+    const groupList = [
+      { pos: '01', name: 'A. Koval', rating: '1,352' }, { pos: '02', name: 'You', rating: '1,284', me: true },
+      { pos: '03', name: 'J. Przybylski', rating: '1,240' }, { pos: '04', name: 'S. Nwosu', rating: '1,188' },
+      { pos: '05', name: 'B. Tam', rating: '1,104' }
+    ];
+
+    const out = {
+      sHome: s.screen === 'home', sJury: s.screen === 'jury', sRank: s.screen === 'rank',
+      sProfile: s.screen === 'profile', sSunday: s.screen === 'sunday', sAssign: s.screen === 'assign',
+      sPrompt: s.screen === 'prompt', sEvidence: s.screen === 'evidence', sDecision: s.screen === 'decision',
+      sArgument: s.screen === 'argument', sLocked: s.screen === 'locked', sLearn: s.screen === 'learn',
+      sGroup: s.screen === 'group',
+      sVerdictRanked: s.screen === 'verdict' && ranked,
+      sVerdictDaily: s.screen === 'verdict' && !ranked,
+      navVisible: hub.indexOf(s.screen) !== -1,
+
+      hasGroup, noGroup: !hasGroup, subscriber, notSubscriber: !subscriber,
+      groupRowMeta: lowPop ? '3 of 38 submitted' : '59 / 41 · 22 of 38 submitted',
+      groupSplitShown: !lowPop, groupSplitHidden: lowPop,
+      groupStandings: rows(groupList),
+
+      startDaily: this.startDaily, startRanked: this.startRanked,
+      goHome: this.go('home'), goSunday: this.go('sunday'), goProfile: this.go('profile'),
+      toPrompt: this.go('prompt'), toEvidence: this.go('evidence'),
+      toDecision: ready ? this.go('decision') : () => {},
+      toArgument: s.choice ? this.go('argument') : () => {},
+      toVerdict: this.go('verdict'), toLearn: this.go('learn'),
+      finish: this.go('home'), openGroup: this.go('group'),
+
+      assigning: !s.sideRevealed, sideRevealed: s.sideRevealed, side: s.side,
+      oppSide: s.side === 'DEFEND' ? 'CHALLENGE' : 'DEFEND',
+      assignNote: s.ticketSide ? 'SIDE LOCKED BY TICKET' : 'SIDES ARE ASSIGNED AUTOMATICALLY',
+      ticketSide: s.ticketSide,
+
+      modeChip: ranked ? 'Ranked · you are ' + s.side.toLowerCase() : 'Daily · judgment',
+      taskLine: ranked ? 'Argue the ' + s.side.toLowerCase() + ' side better than your opponent.' : 'Was the entry unlawful?',
+      promptFoot: ranked ? 'Advocacy is scored. Personal belief is not.' : 'There is no correct answer recorded for this case.',
+
+      evidence: bundle.map(e => {
+        const isOpen = s.opened.indexOf(e.id) !== -1;
+        const spent = !isOpen && s.opened.length >= 2;
+        return {
+          kind: e.kind, title: e.title, body: e.body, hasTerm: !!e.term && isOpen, isOpen,
+          border: isOpen ? '#4C8DF6' : 'rgba(255,255,255,0.07)',
+          fill: isOpen ? '#4C8DF6' : 'transparent',
+          opacity: spent ? 0.45 : 1,
+          onOpen: this.toggleEvidence(e.id)
+        };
+      }),
+      evLeft: ready ? 'ready' : evLeft + ' remaining',
+      evLeftColor: ready ? '#63B37F' : '#8A9099',
+      evCtaBg: ready ? '#4C8DF6' : '#15171A',
+      evCtaFg: ready ? '#08111C' : '#4E545B',
+      openedTitles: openedFull.map(e => ({ upper: e.title.toUpperCase() })),
+
+      decisionTitle: ranked ? 'Pick your theory' : 'What would you do?',
+      decisionSub: ranked
+        ? 'You are arguing ' + s.side.toLowerCase() + '. The theory you lock is shown to the jury alongside your argument.'
+        : 'This is your own conclusion. No side was assigned to you.',
+      options: this.OPTIONS[s.mode].map(o => {
+        const on = s.choice === o.key;
+        return {
+          tag: o.tag, title: o.title, body: o.body, onSelect: this.select(o.key),
+          border: on ? '#ECEDEE' : 'rgba(255,255,255,0.09)',
+          bg: on ? '#15171A' : 'transparent',
+          dot: on ? '#ECEDEE' : 'rgba(255,255,255,0.12)'
+        };
+      }),
+      lockBg: s.choice ? '#4C8DF6' : '#15171A',
+      lockFg: s.choice ? '#08111C' : '#4E545B',
+
+      argTitle: ranked ? 'Make your case' : 'Justify it',
+      lockedLabel: (this.OPTIONS[s.mode].find(o => o.key === s.choice) || {}).title || '—',
+      arg: s.arg, onArg: e => this.setState({ arg: e.target.value }),
+      words, wcColor: over ? '#D2665F' : words > 50 ? '#D3A05B' : '#8A9099',
+      argCtaBg: words > 0 && !over ? '#ECEDEE' : '#15171A',
+      argCtaFg: words > 0 && !over ? '#0B0C0D' : '#4E545B',
+      fileLabel: over ? 'OVER THE LIMIT BY ' + (words - 60) : (ranked ? 'FILE ARGUMENT' : 'SUBMIT'),
+      fileArg: words > 0 && !over ? this.go('locked') : () => {},
+
+      lockedBody: ranked
+        ? 'Your argument is in the anonymous jury queue. The opponent’s argument stays hidden until the matter resolves.'
+        : 'Your judgment is recorded. It cannot be changed for this case.',
+      lockedFoot: ranked ? 'Verdicts normally arrive asynchronously.' : 'Results update as others submit.',
+
+      yourPick: s.choice === 'b' ? 'Challenge' : 'Defend',
+      minorityPct: s.choice === 'b' ? '38%' : '62%',
+      minorityColor: s.choice === 'b' ? '#D3A05B' : '#63B37F',
+      defendTag: s.choice === 'a' ? '· you' : '',
+      challengeTag: s.choice === 'b' ? '· you' : '',
+      defendColor: s.choice === 'a' ? '#ECEDEE' : '#8A9099',
+      challengeColor: s.choice === 'b' ? '#ECEDEE' : '#8A9099',
+      defendBar: s.choice === 'a' ? '#4C8DF6' : '#565C63',
+      challengeBar: s.choice === 'b' ? '#4C8DF6' : '#454B52',
+
+      openedTerms: s.termsOpened.map(id => ({ term: this.GLOSS[id].term, onOpen: this.openGloss(id) })),
+      noOpenedTerms: s.termsOpened.length === 0,
+      unopenedTerms: allTerms.filter(id => s.termsOpened.indexOf(id) === -1)
+        .map(id => ({ term: this.GLOSS[id].term, onOpen: this.openGloss(id) })),
+
+      standings: rows(scopeGroup ? groupList : globalList),
+      standingsLabel: scopeGroup ? 'THE 2L STUDY GROUP · 38 MEMBERS' : 'DIVISION III · NEARBY',
+      scopeIsGroup: scopeGroup,
+      scopeGlobal: () => this.setState({ scope: 'GLOBAL' }),
+      scopeGroup: () => this.setState({ scope: 'GROUP' }),
+      globalBorder: scopeGroup ? 'rgba(255,255,255,0.14)' : '#4C8DF6',
+      globalColor: scopeGroup ? '#8A9099' : '#4C8DF6',
+      groupBorder: scopeGroup ? '#4C8DF6' : 'rgba(255,255,255,0.14)',
+      groupColor: scopeGroup ? '#4C8DF6' : '#8A9099',
+      matches: [
+        { side: 'Challenge · won', case: 'Consent and Revocation', delta: '+18', color: '#63B37F' },
+        { side: 'Defend · lost', case: 'The Shared Wall', delta: '−14', color: '#D2665F' },
+        { side: 'Challenge · won', case: 'Nine Days Late', delta: '+21', color: '#63B37F' },
+        { side: 'Challenge · won', case: 'The Second Signature', delta: '+16', color: '#63B37F' }
+      ],
+      history: [
+        { case: 'Consent and Revocation', meta: 'WON · 71%', color: '#63B37F' },
+        { case: 'The Shared Wall', meta: 'LOST · 38%', color: '#D2665F' },
+        { case: 'A Borrowed Car', meta: 'DAILY · 44%', color: '#8A9099' }
+      ],
+
+      screenRef: this.screenRef, pairRef: this.pairRef,
+      juryVoted: !!s.juryVote,
+      voteA: this.vote('a'), voteB: this.vote('b'),
+      jaText: pair.a.text, jbText: pair.b.text,
+      jaChips: pair.a.chips.map(label => ({ label })),
+      jbChips: pair.b.chips.map(label => ({ label })),
+      jab: s.juryVote === 'a' ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.07)',
+      jbb: s.juryVote === 'b' ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.07)',
+      jao: s.juryVote && s.juryVote !== 'a' ? 0.45 : 1,
+      jbo: s.juryVote && s.juryVote !== 'b' ? 0.45 : 1,
+      jabg: s.juryVote === 'a' ? '#ECEDEE' : 'transparent',
+      jbbg: s.juryVote === 'b' ? '#ECEDEE' : 'transparent',
+      jafg: s.juryVote === 'a' ? '#0B0C0D' : '#ECEDEE',
+      jbfg: s.juryVote === 'b' ? '#0B0C0D' : '#ECEDEE',
+      jaName: s.juryVote ? pair.a.name : 'anonymous',
+      jbName: s.juryVote ? pair.b.name : 'anonymous',
+      juryFoot: s.juryVote
+        ? 'Vote recorded · identities released'
+        : 'Pair ' + (s.pair + 1) + ' of ' + this.JURY_PAIRS.length + ' · vote in one tap',
+      juryFootColor: s.juryVote ? '#63B37F' : '#565C63',
+
+      glossOpen: !!g, glossTerm: g ? g.term : '', glossCategory: g ? g.category : '',
+      glossMeaning: g ? g.meaning : '', glossHeardAs: g ? g.heardAs : '',
+      glossRelated: g && !capped ? g.related.slice(0, 3).map(id => ({ term: this.GLOSS[id].term, onOpen: this.openGloss(id) })) : [],
+      glossHasRelated: !!g && !capped, glossCapped: !!g && capped,
+      closeGloss: () => this.setState({ gloss: null, glossDepth: 0 }),
+      glossKnowingly: this.openGloss('knowingly'),
+      glossLicensed: this.openGloss('licensed'),
+      glossNotice: this.openGloss('notice'),
+      glossHandbook: this.openGloss('constructive-notice'),
+
+      ticketOpen: s.ticketOpen,
+      openTicket: () => this.setState({ ticketOpen: true }),
+      closeTicket: () => this.setState({ ticketOpen: false }),
+      ticketRowLabel: subscriber ? (s.ticketSide ? s.ticketSide + ' LOCKED' : '3 LEFT') : 'LOCKED',
+      ticketHeadline: subscriber ? '3 remaining' : 'Subscription required',
+      ticketBody: subscriber
+        ? 'A ticket guarantees your side for the next eligible Ranked match. It changes nothing else: rating, opponent quality, evidence, and jury treatment are unaffected.'
+        : 'Side-Lock Tickets are part of the subscription. They sell preference over role, not competitive advantage.',
+      pickDefend: () => this.setState({ ticketPick: 'DEFEND' }),
+      pickChallenge: () => this.setState({ ticketPick: 'CHALLENGE' }),
+      defendLockBorder: s.ticketPick === 'DEFEND' ? '#D3A05B' : 'rgba(255,255,255,0.14)',
+      defendLockColor: s.ticketPick === 'DEFEND' ? '#D3A05B' : '#8A9099',
+      challengeLockBorder: s.ticketPick === 'CHALLENGE' ? '#D3A05B' : 'rgba(255,255,255,0.14)',
+      challengeLockColor: s.ticketPick === 'CHALLENGE' ? '#D3A05B' : '#8A9099',
+      useTicket: () => { this.setState({ ticketSide: s.ticketPick, ticketOpen: false }); this.navigate('home'); }
+    };
+
+    hub.forEach((k, i) => {
+      const on = s.screen === k;
+      out['n' + i] = this.go(k);
+      out['c' + i] = on ? '#ECEDEE' : '#5D646C';
+      out['o' + i] = on ? 1 : 0;
+    });
+    return out;
+  }
+}
+</script>
+</body>
+</html>
