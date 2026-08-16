@@ -47,10 +47,12 @@
 <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">STREAK</div><div style="font:500 15px/1 'JetBrains Mono',monospace">31 days</div></div>
 </div>
 
+<sc-if value="{{ sundayLive }}" hint-placeholder-val="{{ true }}">
 <div onClick="{{ goSunday }}" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#15171A;border:1px solid rgba(211,160,91,.28);border-radius:16px;cursor:pointer">
 <div style="display:flex;flex-direction:column;gap:7px"><div style="font:700 17px/1 Archivo,sans-serif;letter-spacing:-0.02em;text-transform:uppercase">Sunday Sitting</div><div style="font:400 12.5px/1 'Instrument Sans',system-ui;color:#7A828B">Five rulings · one sitting</div></div>
 <div style="font:500 12px/1 'JetBrains Mono',monospace;color:#D3A05B">02:14:37</div>
 </div>
+</sc-if>
 
 <div style="display:flex;flex-direction:column;gap:14px">
 <div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">YESTERDAY · CASE 0416</div>
@@ -70,40 +72,6 @@
 <div style="font:400 15px/1 'Instrument Sans',system-ui;color:#7A828B">→</div>
 </div>
 </sc-if>
-</div>
-</sc-if>
-
-<sc-if value="{{ sJury }}" hint-placeholder-val="{{ false }}">
-<div data-screen-label="Jury" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:20px">
-<div style="display:flex;flex-direction:column;gap:9px">
-<div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase">The jury</div>
-<div style="font:400 14px/1.45 'Instrument Sans',system-ui;color:#8A9099">Which advocate made the stronger case from the evidence available to them?</div>
-</div>
-
-<div ref="{{ pairRef }}" style="display:flex;flex-direction:column;gap:20px">
-<div style="background:#15171A;border:1px solid {{ jab }};border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px;opacity:{{ jao }}">
-<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">ARGUMENT A</div><div style="font:400 11px/1 'JetBrains Mono',monospace;color:#565C63">{{ jaName }}</div></div>
-<div style="font:400 16px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">{{ jaText }}</div>
-<div style="display:flex;gap:7px;flex-wrap:wrap">
-<sc-for list="{{ jaChips }}" as="c" hint-placeholder-count="2">
-<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">{{ c.label }}</div>
-</sc-for>
-</div>
-<div onClick="{{ voteA }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:{{ jabg }};color:{{ jafg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="transform:scale(0.985)">VOTE A</div>
-</div>
-
-<div style="background:#15171A;border:1px solid {{ jbb }};border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px;opacity:{{ jbo }}">
-<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">ARGUMENT B</div><div style="font:400 11px/1 'JetBrains Mono',monospace;color:#565C63">{{ jbName }}</div></div>
-<div style="font:400 16px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">{{ jbText }}</div>
-<div style="display:flex;gap:7px;flex-wrap:wrap">
-<sc-for list="{{ jbChips }}" as="c" hint-placeholder-count="2">
-<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">{{ c.label }}</div>
-</sc-for>
-</div>
-<div onClick="{{ voteB }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:{{ jbbg }};color:{{ jbfg }};font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="transform:scale(0.985)">VOTE B</div>
-</div>
-</div>
-<div style="display:flex;align-items:center;justify-content:center;font:400 12px/1 'JetBrains Mono',monospace;color:{{ juryFootColor }};padding-bottom:8px">{{ juryFoot }}</div>
 </div>
 </sc-if>
 
@@ -150,9 +118,9 @@
 
 <sc-if value="{{ sSunday }}" hint-placeholder-val="{{ false }}">
 <div data-screen-label="Sunday" style="flex:1;overflow:auto;padding:62px 22px 12px;display:flex;flex-direction:column;gap:22px">
-<div style="display:flex;align-items:center;justify-content:space-between">
-<div style="font:700 21px/1 Archivo,sans-serif;letter-spacing:-0.035em">CaseDrop</div>
-<div onClick="{{ goProfile }}" style="width:34px;height:34px;border-radius:50%;background:#1D2126;border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font:600 11px 'JetBrains Mono',monospace;color:#A8AEB6;cursor:pointer">MH</div>
+<div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+<div style="font:400 15px/1 'Instrument Sans',system-ui;color:#7A828B">←</div>
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">HOME</div>
 </div>
 <div style="background:#15171A;border:1px solid rgba(211,160,91,.35);border-radius:20px;padding:24px 22px 22px;display:flex;flex-direction:column;gap:20px">
 <div style="display:flex;align-items:center;justify-content:space-between">
@@ -160,7 +128,7 @@
 <div style="font:500 12px/1 'JetBrains Mono',monospace;color:#D3A05B">02:14:37</div>
 </div>
 <div style="font:800 40px/0.96 Archivo,sans-serif;letter-spacing:-0.028em;text-transform:uppercase">En banc. Five issues. One sitting.</div>
-<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099">One extended case each Sunday. Five separate rulings, argued in sequence, resolved by a full jury panel rather than a pair.</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099">One extended case each Sunday. Five separate rulings, argued in sequence, resolved by a full panel rather than a single matchup.</div>
 <div style="display:flex;flex-wrap:wrap;gap:0 26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)">
 <div style="display:flex;flex-direction:column;gap:5px"><div style="font:500 17px/1 'JetBrains Mono',monospace">5</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">rulings</div></div>
 <div style="display:flex;flex-direction:column;gap:5px"><div style="font:500 17px/1 'JetBrains Mono',monospace">11</div><div style="font:400 11.5px/1 'Instrument Sans',system-ui;color:#7A828B">jurors</div></div>
@@ -241,7 +209,7 @@
 
 <sc-if value="{{ sAssign }}" hint-placeholder-val="{{ false }}">
 <div data-screen-label="Assigning counsel" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column">
-<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">MATCH FOUND · OPPONENT 1,291</div>
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">OPPONENT DRAWN · {{ oppRating }} · FILED {{ oppFiled }}</div>
 <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px">
 <sc-if value="{{ assigning }}" hint-placeholder-val="{{ true }}">
 <div style="font:800 30px/1 Archivo,sans-serif;letter-spacing:-0.025em;text-transform:uppercase;color:#4E545B;animation:cdPulse 1.1s ease-in-out infinite">Assigning counsel…</div>
@@ -251,6 +219,7 @@
 <div style="font:800 52px/0.94 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">You are<br>{{ side }}</div>
 <div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">This is your side. Make the strongest case you can.</div>
 <div style="font:400 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#7A828B">{{ assignNote }}</div>
+<div style="font:400 13px/1.5 'Instrument Sans',system-ui;color:#565C63;padding-top:6px;border-top:1px solid rgba(255,255,255,.07);text-wrap:pretty">Your opponent argued {{ oppSide }} on this case earlier. Their argument is fixed. Yours is not.</div>
 </div>
 </sc-if>
 </div>
@@ -393,14 +362,43 @@
 </sc-if>
 
 <sc-if value="{{ sVerdictRanked }}" hint-placeholder-val="{{ false }}">
-<div data-screen-label="Verdict" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:26px">
+<div data-screen-label="Panel Reveal" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:24px">
+
 <div style="display:flex;flex-direction:column;gap:14px">
-<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#63B37F">JURY FINDS FOR YOU</div>
-<div style="display:flex;align-items:baseline;gap:14px">
-<div style="font:600 68px/0.9 'JetBrains Mono',monospace;letter-spacing:-0.04em">4–3</div>
-<div style="font:400 15px/1 'JetBrains Mono',monospace;color:#7A828B">jury vote</div>
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:{{ panelMetaColor }}">{{ panelMeta }}</div>
+<sc-if value="{{ panelRunning }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ skipReveal }}" style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#565C63;cursor:pointer">SKIP</div>
+</sc-if>
 </div>
-<div style="display:flex;gap:3px;height:6px"><div style="flex:4;background:#63B37F;border-radius:3px"></div><div style="flex:3;background:#1B1E21;border-radius:3px"></div></div>
+<div style="display:flex;align-items:baseline;gap:14px">
+<div style="font:600 68px/0.9 'JetBrains Mono',monospace;letter-spacing:-0.04em">{{ panelTally }}</div>
+<div style="font:400 15px/1 'JetBrains Mono',monospace;color:#7A828B">panel vote</div>
+</div>
+<div style="display:flex;gap:3px;height:6px">
+<sc-for list="{{ panelPips }}" as="p" hint-placeholder-count="10">
+<div style="flex:1;background:{{ p.color }};border-radius:2px"></div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ panelRows }}" as="j" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:9px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07);animation:cdFade .34s ease both">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+<div style="font:600 15px/1 Archivo,sans-serif;letter-spacing:.01em;text-transform:uppercase">{{ j.role }}</div>
+<div style="font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:{{ j.color }};white-space:nowrap">{{ j.call }}</div>
+</div>
+<div style="font:400 14px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ j.note }}</div>
+</div>
+</sc-for>
+</div>
+
+<sc-if value="{{ panelDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px;animation:cdFade .42s ease both">
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:22px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:{{ outcomeColor }}">{{ outcomeLabel }}</div>
+<div style="font:800 38px/1 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">{{ outcomeHead }}</div>
 </div>
 <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px">
 <div style="display:flex;flex-direction:column;gap:6px"><div style="font:400 11px/1 'Instrument Sans',system-ui;color:#7A828B">RATING</div><div style="font:500 20px/1 'JetBrains Mono',monospace">1,266 → 1,284</div></div>
@@ -408,28 +406,21 @@
 </div>
 <div style="display:flex;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);padding:16px 0">
 <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">{{ side }}</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">YOUR SIDE</div></div>
-<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">1,291</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">OPPONENT</div></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">{{ oppRating }}</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">OPPONENT</div></div>
 <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font:500 15px/1 'JetBrains Mono',monospace">+120</div><div style="font:400 10.5px/1 'Instrument Sans',system-ui;color:#7A828B">XP</div></div>
 </div>
-<div style="display:flex;flex-direction:column;gap:12px">
 <div style="background:#15171A;border:1px solid rgba(99,179,127,.3);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
-<div style="display:flex;align-items:center;justify-content:space-between"><div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#63B37F">YOU OPENED</div></div>
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#63B37F">YOU OPENED</div>
 <div style="display:flex;gap:7px;flex-wrap:wrap">
 <sc-for list="{{ openedTitles }}" as="t" hint-placeholder-count="2">
 <div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A8AEB6">{{ t.upper }}</div>
 </sc-for>
 </div>
 </div>
-<div style="background:#15171A;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
-<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">OPPONENT OPENED · {{ oppSide }}</div>
-<div style="display:flex;gap:7px;flex-wrap:wrap">
-<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">IT DEACTIVATION TICKET</div>
-<div style="padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A9099">MANAGER MESSAGES</div>
-</div>
-</div>
-</div>
-<div style="flex:1;min-height:10px"></div>
 <div onClick="{{ toLearn }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">REVIEW CASE</div>
+<div style="font:400 12px/1.4 'Instrument Sans',system-ui;color:#565C63;text-align:center">The panel reads the evidence you opened. It never sees your rating or the community split.</div>
+</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -462,6 +453,59 @@
 <div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">MOST-READ JUSTIFICATION · DEFEND</div>
 <div style="font:400 15.5px/1.5 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">“The badge still worked and the deactivation was scheduled for the morning. An employer that leaves access operational has not personally communicated anything.”</div>
 </div>
+<div style="flex:1;min-height:10px"></div>
+<div onClick="{{ toAnalysis }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">ANALYSE MY ARGUMENT</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sAnalysis }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Daily Analysis" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">YOUR ARGUMENT · {{ words }} WORDS</div>
+<div style="font:800 34px/1 Archivo,sans-serif;letter-spacing:-0.03em;text-transform:uppercase">What you built</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#7A828B;text-wrap:pretty">This reviews how the case was made, never whether the position was right.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#7A828B">EVIDENCE YOU DID NOT OPEN</div>
+<sc-for list="{{ debrief }}" as="d" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:9px;padding:16px 18px;background:#15171A;border:1px solid {{ d.border }};border-radius:14px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+<div style="font:600 14.5px/1 Archivo,sans-serif;letter-spacing:.01em;text-transform:uppercase">{{ d.title }}</div>
+<div style="font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.13em;color:{{ d.color }};white-space:nowrap">{{ d.tag }}</div>
+</div>
+<div style="font:400 13.5px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ d.body }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#4C8DF6">HEADLINE</div>
+<div style="font:400 16px/1.55 'Instrument Sans',system-ui;color:#D3D6D9;text-wrap:pretty">You asserted that access remained authorised but never cited the badge log you had open. The claim was doing the work of an exhibit.</div>
+</div>
+
+<sc-if value="{{ notSubscriber }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px;padding:22px;background:#15171A;border:1px solid rgba(211,160,91,.35);border-radius:16px">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#D3A05B">FULL BREAKDOWN</div>
+<div style="font:400 14px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">All five evidence items analysed, plus how your reasoning has moved across every case you have played.</div>
+<div style="flex:none;display:flex;align-items:center;justify-content:center;height:52px;border-radius:13px;border:1px solid rgba(211,160,91,.5);color:#D3A05B;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer">SUBSCRIBE · $7.99 / MO</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ subscriber }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:18px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07)">
+<div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#D3A05B">PATTERN · LAST 12 CASES</div>
+<div style="display:flex;flex-direction:column;gap:13px">
+<sc-for list="{{ patterns }}" as="p" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:400 13.5px/1 'Instrument Sans',system-ui;color:#A8AEB6">{{ p.label }}</div><div style="font:500 13px/1 'JetBrains Mono',monospace;color:#ECEDEE">{{ p.value }}</div></div>
+<div style="height:4px;border-radius:2px;background:#1B1E21;overflow:hidden"><div style="width:{{ p.width }};height:100%;background:{{ p.bar }}"></div></div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
 <div style="flex:1;min-height:10px"></div>
 <div onClick="{{ toLearn }}" style="flex:none;display:flex;align-items:center;justify-content:center;height:56px;border-radius:13px;background:#ECEDEE;color:#0B0C0D;font:700 13px Archivo,sans-serif;letter-spacing:.14em;cursor:pointer" style-active="background:#C9CBCE">REVIEW CASE</div>
 </div>
@@ -567,20 +611,16 @@
 <div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c0 }};opacity:{{ o0 }}">Home</div>
 </div>
 <div onClick="{{ n1 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
-<svg width="19" height="19" viewBox="0 0 20 20"><rect x="2.4" y="4" width="6" height="12" rx="1.6" fill="none" stroke="{{ c1 }}" stroke-width="1.6"></rect><rect x="11.6" y="4" width="6" height="12" rx="1.6" fill="none" stroke="{{ c1 }}" stroke-width="1.6"></rect></svg>
-<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c1 }};opacity:{{ o1 }}">Jury</div>
+<svg width="19" height="19" viewBox="0 0 20 20"><path d="M3 16.5 V12 M10 16.5 V7 M17 16.5 V3" fill="none" stroke="{{ c1 }}" stroke-width="1.7" stroke-linecap="round"></path></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c1 }};opacity:{{ o1 }}">Rank</div>
 </div>
 <div onClick="{{ n2 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
-<svg width="19" height="19" viewBox="0 0 20 20"><path d="M3 16.5 V12 M10 16.5 V7 M17 16.5 V3" fill="none" stroke="{{ c2 }}" stroke-width="1.7" stroke-linecap="round"></path></svg>
-<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c2 }};opacity:{{ o2 }}">Rank</div>
+<svg width="19" height="19" viewBox="0 0 20 20"><rect x="2.8" y="3.4" width="14.4" height="13.2" rx="1.8" fill="none" stroke="{{ c2 }}" stroke-width="1.6"></rect><path d="M10 3.4 V16.6" fill="none" stroke="{{ c2 }}" stroke-width="1.6"></path></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c2 }};opacity:{{ o2 }}">Learn</div>
 </div>
 <div onClick="{{ n3 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
-<svg width="19" height="19" viewBox="0 0 20 20"><path d="M10 2.6 L17.4 10 L10 17.4 L2.6 10 Z" fill="none" stroke="{{ c3 }}" stroke-width="1.6" stroke-linejoin="round"></path></svg>
-<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c3 }};opacity:{{ o3 }}">Sunday</div>
-</div>
-<div onClick="{{ n4 }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
-<svg width="19" height="19" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.3" fill="none" stroke="{{ c4 }}" stroke-width="1.6"></circle></svg>
-<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c4 }};opacity:{{ o4 }}">Profile</div>
+<svg width="19" height="19" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.3" fill="none" stroke="{{ c3 }}" stroke-width="1.6"></circle></svg>
+<div style="font-size:9.5px;letter-spacing:0.09em;text-transform:uppercase;color:{{ c3 }};opacity:{{ o3 }}">Profile</div>
 </div>
 </div>
 </sc-if>
@@ -659,31 +699,30 @@
 </x-import>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:460,&quot;height&quot;:960},&quot;hasGroup&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;groupLowPopulation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;subscriber&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:460,&quot;height&quot;:960},&quot;hasGroup&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;groupLowPopulation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;subscriber&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;},&quot;sundayLive&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Account state&quot;}}">
 class Component extends DCLogic {
   state = {
     screen: 'home', mode: 'ranked', side: 'CHALLENGE', sideRevealed: false,
     opened: [], choice: null, arg: '', gloss: null, glossDepth: 0,
-    scope: 'GLOBAL', juryVote: null, ticketOpen: false, ticketPick: 'CHALLENGE',
-    ticketSide: null, termsOpened: [], pair: 0
+    scope: 'GLOBAL', ticketOpen: false, ticketPick: 'CHALLENGE',
+    ticketSide: null, termsOpened: [], revealed: 0
   };
 
   screenRef = React.createRef();
-  pairRef = React.createRef();
 
-  JURY_PAIRS = [
-    {
-      a: { name: 'R. Oyelaran · 1,341', text: '“Consent was withdrawn in writing before entry. The written revocation is the operative fact, and the guard\u2019s silence cannot restore a permission the employer had already removed.”', chips: ['TERMINATION EMAIL', 'BADGE ACCESS LOG'] },
-      b: { name: 'D. Ferraro · 1,298', text: '“Access was never actually withdrawn. The badge worked, deactivation was scheduled for the next morning, and building security admitted her without objection.”', chips: ['IT DEACTIVATION TICKET', 'GUARD STATEMENT'] }
-    },
-    {
-      a: { name: 'S. Nwosu · 1,188', text: '“The records room is the only room that matters. Whatever she believed about the lobby, no version of her permission reached a restricted file room at 20:19.”', chips: ['BADGE ACCESS LOG', 'HANDBOOK §7.2'] },
-      b: { name: 'K. Abara · 1,618', text: '“Her manager told her to collect her things whenever. That instruction was never retracted, and it is the only one she had actually read when she walked in.”', chips: ['MANAGER MESSAGES', 'LOBBY CAMERA STILL'] }
-    },
-    {
-      a: { name: 'T. Lindqvist · 1,552', text: '“Nothing was taken and two folders sat out of order. That is the evidentiary weight of the state\u2019s case: an inventory that proves the room was entered and nothing else.”', chips: ['RECORDS ROOM AUDIT', 'LOBBY CAMERA STILL'] },
-      b: { name: 'A. Koval · 1,352', text: '“Trespass does not require theft. The offence completes at the threshold, and the audit only tells us she was disciplined about what she touched.”', chips: ['HANDBOOK §7.2', 'BADGE ACCESS LOG'] }
-    }
+  // §27.2 — ten jurors drawn from the pool, defined by how they read, not by personality.
+  // §27.3 — each returns a side and one line. Side-blind, stat-blind, deterministic.
+  PANEL = [
+    { role: 'The Formalist', win: true, note: 'The revocation carried a timestamp and you cited it. The opposing argument asserted authority without pointing at anything.' },
+    { role: 'The Pragmatist', win: false, note: 'A working badge and a deactivation scheduled for morning is the world as people actually find it. That argument did more with less.' },
+    { role: 'The Skeptic', win: true, note: 'Every claim you made was tied to a document you had open. The other side asserted the manager\u2019s instruction survived without showing it.' },
+    { role: 'The Equitable', win: false, note: 'The opposing case put a person in front of me. Yours put a rule in front of me.' },
+    { role: 'Evidence-First', win: true, note: 'Two exhibits cited, both used. The other advocate referenced one and leaned on inference for the rest.' },
+    { role: 'The Institutionalist', win: true, note: 'The records room is governed by a written rule and you quoted it. That is the firmest anchor either side offered.' },
+    { role: 'The Plain-Reader', win: false, note: 'I understood the other argument on first reading. Yours needed a second pass to land.' },
+    { role: 'The Contrarian', win: true, note: 'I went looking for the hole in your position and found it already defended \u2014 you conceded the lobby and narrowed to the room.' },
+    { role: 'The Textualist', win: true, note: '\u201cDo not access company offices\u201d is not ambiguous, and you read it rather than around it.' },
+    { role: 'The Consequentialist', win: false, note: 'Neither argument asked what the rule is for. Yours came closer to treating it as an end in itself.' }
   ];
 
   GLOSS = {
@@ -715,18 +754,18 @@ class Component extends DCLogic {
 
   EVIDENCE = {
     ranked: [
-      { id: 'E1', kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
-      { id: 'E2', kind: 'Turnstile and door reads for the evening.', title: 'Badge Access Log', body: 'Lobby turnstile 20:14. Fourth-floor door 20:17. Records room 20:19. Exit 20:36. Badge credential active throughout.' },
-      { id: 'E5', kind: 'After-hours and records room rules.', title: 'Employee Handbook §7.2', body: 'After-hours access is limited to work assigned in advance. Records room entry requires a logged business purpose. Employees are responsible for company notices sent to their work address.', term: true },
-      { id: 'E7', kind: 'From the guard on duty that night.', title: 'Security Guard Statement', body: 'Guard says he recognised her, said good evening, and raised no objection. He had received no list of departed employees that day.' },
-      { id: 'E9', kind: 'Lobby camera frame at the time of entry.', title: 'Lobby Camera Still', body: 'Frame at 20:14 shows her carrying an empty personal box and a coat. No bag large enough for files.' }
+      { id: 'E1', supports: ['a'], kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
+      { id: 'E2', supports: ['b'], kind: 'Turnstile and door reads for the evening.', title: 'Badge Access Log', body: 'Lobby turnstile 20:14. Fourth-floor door 20:17. Records room 20:19. Exit 20:36. Badge credential active throughout.' },
+      { id: 'E5', supports: ['b'], kind: 'After-hours and records room rules.', title: 'Employee Handbook §7.2', body: 'After-hours access is limited to work assigned in advance. Records room entry requires a logged business purpose. Employees are responsible for company notices sent to their work address.', term: true },
+      { id: 'E7', supports: [], kind: 'From the guard on duty that night.', title: 'Security Guard Statement', body: 'Guard says he recognised her, said good evening, and raised no objection. He had received no list of departed employees that day.' },
+      { id: 'E9', supports: [], kind: 'Lobby camera frame at the time of entry.', title: 'Lobby Camera Still', body: 'Frame at 20:14 shows her carrying an empty personal box and a coat. No bag large enough for files.' }
     ],
     daily: [
-      { id: 'E1', kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
-      { id: 'E3', kind: 'The badge and account revocation task.', title: 'IT Deactivation Ticket', body: 'Opened 17:11, priority normal, scheduled for 09:00 the following morning. Badge and account deactivation grouped in one task.' },
-      { id: 'E4', kind: 'Between the employee and her manager.', title: 'Manager Messages', body: 'At 16:52 the manager wrote: grab your things whenever, no rush. Sent nine minutes before the termination email. No later message retracts it.' },
-      { id: 'E6', kind: 'Inventory taken the next morning.', title: 'Records Room Audit', body: 'Inventory shows nothing missing. Two folders were out of sequence on the shelf nearest the door.' },
-      { id: 'E8', kind: 'Work mail sessions on her own phone.', title: 'Personal Phone Records', body: 'Work mail application opened 23:41. No earlier session that evening. Push notifications for the work account were disabled 6 March.' }
+      { id: 'E1', supports: ['b'], kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
+      { id: 'E3', supports: ['a'], kind: 'The badge and account revocation task.', title: 'IT Deactivation Ticket', body: 'Opened 17:11, priority normal, scheduled for 09:00 the following morning. Badge and account deactivation grouped in one task.' },
+      { id: 'E4', supports: ['a'], kind: 'Between the employee and her manager.', title: 'Manager Messages', body: 'At 16:52 the manager wrote: grab your things whenever, no rush. Sent nine minutes before the termination email. No later message retracts it.' },
+      { id: 'E6', supports: ['b'], kind: 'Inventory taken the next morning.', title: 'Records Room Audit', body: 'Inventory shows nothing missing. Two folders were out of sequence on the shelf nearest the door.' },
+      { id: 'E8', supports: ['a'], kind: 'Work mail sessions on her own phone.', title: 'Personal Phone Records', body: 'Work mail application opened 23:41. No earlier session that evening. Push notifications for the work account were disabled 6 March.' }
     ]
   };
 
@@ -741,7 +780,7 @@ class Component extends DCLogic {
     ]
   };
 
-  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._nt); clearTimeout(this._jt); }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._nt); clearInterval(this._rv); }
 
   anim(el, keyframes, options) {
     const M = window.Motion;
@@ -770,7 +809,7 @@ class Component extends DCLogic {
     el.style.transform = '';
   }
 
-  componentDidMount() { this._lastScreen = this.state.screen; this._lastPair = this.state.pair; }
+  componentDidMount() { this._lastScreen = this.state.screen; }
 
   componentDidUpdate() {
     const el = this.screenRef.current;
@@ -783,26 +822,25 @@ class Component extends DCLogic {
     } else if (el && !this._navving && el.style.opacity === '0') {
       this.reveal(el);
     }
-    const pel = this.pairRef.current;
-    if (this._lastPair !== this.state.pair) {
-      this._lastPair = this.state.pair;
-      this.reveal(pel);
-      this.anim(pel,
-        { opacity: [0, 1], transform: ['translateY(18px) scale(0.985)', 'translateY(0px) scale(1)'] },
-        { duration: 0.42, easing: [0.16, 0.9, 0.3, 1] });
-    }
   }
 
-  vote = (v) => () => {
-    if (this.state.juryVote) return;
-    this.setState({ juryVote: v });
-    clearTimeout(this._jt);
-    this._jt = setTimeout(() => {
-      const el = this.pairRef.current;
-      const next = () => this.setState(s => ({ pair: (s.pair + 1) % this.JURY_PAIRS.length, juryVote: null }));
-      const a = this.anim(el, { opacity: [1, 0], transform: ['translateY(0px)', 'translateY(-14px)'] }, { duration: 0.2, easing: [0.4, 0, 1, 1] });
-      if (a && a.finished) a.finished.then(next, next); else setTimeout(next, 200);
-    }, 1250);
+  // §27.4 — verdicts arrive together; the sequential presentation is the payoff,
+  // and in production it also covers the round trip.
+  startReveal = () => {
+    clearInterval(this._rv);
+    this.setState({ revealed: 0 });
+    this._rv = setInterval(() => {
+      this.setState(s => {
+        const n = s.revealed + 1;
+        if (n >= this.PANEL.length) clearInterval(this._rv);
+        return { revealed: n };
+      });
+    }, 640);
+  };
+
+  skipReveal = () => {
+    clearInterval(this._rv);
+    this.setState({ revealed: this.PANEL.length });
   };
 
   go = (screen) => () => this.navigate(screen);
@@ -845,16 +883,28 @@ class Component extends DCLogic {
     const hasGroup = this.props.hasGroup ?? true;
     const lowPop = this.props.groupLowPopulation ?? false;
     const subscriber = this.props.subscriber ?? true;
-    const hub = ['home', 'jury', 'rank', 'sunday', 'profile'];
+    const sundayLive = this.props.sundayLive ?? true;
+    // §27.9 — four destinations. Jury is gone; Sunday is a Home card when live.
+    const hub = ['home', 'rank', 'learn', 'profile'];
+    // §27.8 — the 60-word cap exists so jurors can compare two arguments.
+    // Daily has no juror, so it runs at 150.
+    const cap = ranked ? 60 : 150;
     const words = s.arg.trim() ? s.arg.trim().split(/\s+/).length : 0;
-    const over = words > 60;
+    const over = words > cap;
     const bundle = this.EVIDENCE[s.mode];
     const openedFull = bundle.filter(e => s.opened.indexOf(e.id) !== -1);
+    const unopened = bundle.filter(e => s.opened.indexOf(e.id) === -1);
+
+    // §27.4 — panel tally derived from however many jurors have been revealed.
+    const shown = this.PANEL.slice(0, s.revealed);
+    const forYou = shown.filter(j => j.win).length;
+    const against = shown.length - forYou;
+    const panelDone = s.revealed >= this.PANEL.length;
+    const won = forYou > against;
     const g = s.gloss ? this.GLOSS[s.gloss] : null;
     const capped = s.glossDepth >= 3;
     const allTerms = ['knowingly', 'licensed', 'notice', 'constructive-notice'];
     const scopeGroup = s.scope === 'GROUP' && hasGroup;
-    const pair = this.JURY_PAIRS[s.pair];
     const evLeft = 2 - s.opened.length;
     const ready = evLeft === 0;
 
@@ -879,14 +929,15 @@ class Component extends DCLogic {
     ];
 
     const out = {
-      sHome: s.screen === 'home', sJury: s.screen === 'jury', sRank: s.screen === 'rank',
+      sHome: s.screen === 'home', sRank: s.screen === 'rank',
       sProfile: s.screen === 'profile', sSunday: s.screen === 'sunday', sAssign: s.screen === 'assign',
       sPrompt: s.screen === 'prompt', sEvidence: s.screen === 'evidence', sDecision: s.screen === 'decision',
       sArgument: s.screen === 'argument', sLocked: s.screen === 'locked', sLearn: s.screen === 'learn',
-      sGroup: s.screen === 'group',
+      sGroup: s.screen === 'group', sAnalysis: s.screen === 'analysis',
       sVerdictRanked: s.screen === 'verdict' && ranked,
       sVerdictDaily: s.screen === 'verdict' && !ranked,
       navVisible: hub.indexOf(s.screen) !== -1,
+      sundayLive,
 
       hasGroup, noGroup: !hasGroup, subscriber, notSubscriber: !subscriber,
       groupRowMeta: lowPop ? '3 of 38 submitted' : '59 / 41 · 22 of 38 submitted',
@@ -898,11 +949,14 @@ class Component extends DCLogic {
       toPrompt: this.go('prompt'), toEvidence: this.go('evidence'),
       toDecision: ready ? this.go('decision') : () => {},
       toArgument: s.choice ? this.go('argument') : () => {},
-      toVerdict: this.go('verdict'), toLearn: this.go('learn'),
+      toVerdict: () => { this.navigate('verdict'); if (ranked) this.startReveal(); },
+      toLearn: this.go('learn'), toAnalysis: this.go('analysis'),
       finish: this.go('home'), openGroup: this.go('group'),
 
       assigning: !s.sideRevealed, sideRevealed: s.sideRevealed, side: s.side,
       oppSide: s.side === 'DEFEND' ? 'CHALLENGE' : 'DEFEND',
+      // §27.5 — the opponent is a stored argument, not a live player.
+      oppRating: '1,291', oppFiled: '3 DAYS AGO',
       assignNote: s.ticketSide ? 'SIDE LOCKED BY TICKET' : 'SIDES ARE ASSIGNED AUTOMATICALLY',
       ticketSide: s.ticketSide,
 
@@ -929,7 +983,7 @@ class Component extends DCLogic {
 
       decisionTitle: ranked ? 'Pick your theory' : 'What would you do?',
       decisionSub: ranked
-        ? 'You are arguing ' + s.side.toLowerCase() + '. The theory you lock is shown to the jury alongside your argument.'
+        ? 'You are arguing ' + s.side.toLowerCase() + '. The theory you lock is shown to the panel alongside your argument.'
         : 'This is your own conclusion. No side was assigned to you.',
       options: this.OPTIONS[s.mode].map(o => {
         const on = s.choice === o.key;
@@ -949,13 +1003,14 @@ class Component extends DCLogic {
       words, wcColor: over ? '#D2665F' : words > 50 ? '#D3A05B' : '#8A9099',
       argCtaBg: words > 0 && !over ? '#ECEDEE' : '#15171A',
       argCtaFg: words > 0 && !over ? '#0B0C0D' : '#4E545B',
-      fileLabel: over ? 'OVER THE LIMIT BY ' + (words - 60) : (ranked ? 'FILE ARGUMENT' : 'SUBMIT'),
+      fileLabel: over ? 'OVER THE LIMIT BY ' + (words - cap) : (ranked ? 'FILE ARGUMENT' : 'SUBMIT'),
+      cap,
       fileArg: words > 0 && !over ? this.go('locked') : () => {},
 
       lockedBody: ranked
-        ? 'Your argument is in the anonymous jury queue. The opponent’s argument stays hidden until the matter resolves.'
+        ? 'Your argument goes to the panel now. Your opponent’s was filed days ago and has not changed.'
         : 'Your judgment is recorded. It cannot be changed for this case.',
-      lockedFoot: ranked ? 'Verdicts normally arrive asynchronously.' : 'Results update as others submit.',
+      lockedFoot: ranked ? 'Ten jurors read it. The verdict is immediate.' : 'Results update as others submit.',
 
       yourPick: s.choice === 'b' ? 'Challenge' : 'Defend',
       minorityPct: s.choice === 'b' ? '38%' : '62%',
@@ -993,26 +1048,44 @@ class Component extends DCLogic {
         { case: 'A Borrowed Car', meta: 'DAILY · 44%', color: '#8A9099' }
       ],
 
-      screenRef: this.screenRef, pairRef: this.pairRef,
-      juryVoted: !!s.juryVote,
-      voteA: this.vote('a'), voteB: this.vote('b'),
-      jaText: pair.a.text, jbText: pair.b.text,
-      jaChips: pair.a.chips.map(label => ({ label })),
-      jbChips: pair.b.chips.map(label => ({ label })),
-      jab: s.juryVote === 'a' ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.07)',
-      jbb: s.juryVote === 'b' ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.07)',
-      jao: s.juryVote && s.juryVote !== 'a' ? 0.45 : 1,
-      jbo: s.juryVote && s.juryVote !== 'b' ? 0.45 : 1,
-      jabg: s.juryVote === 'a' ? '#ECEDEE' : 'transparent',
-      jbbg: s.juryVote === 'b' ? '#ECEDEE' : 'transparent',
-      jafg: s.juryVote === 'a' ? '#0B0C0D' : '#ECEDEE',
-      jbfg: s.juryVote === 'b' ? '#0B0C0D' : '#ECEDEE',
-      jaName: s.juryVote ? pair.a.name : 'anonymous',
-      jbName: s.juryVote ? pair.b.name : 'anonymous',
-      juryFoot: s.juryVote
-        ? 'Vote recorded · identities released'
-        : 'Pair ' + (s.pair + 1) + ' of ' + this.JURY_PAIRS.length + ' · vote in one tap',
-      juryFootColor: s.juryVote ? '#63B37F' : '#565C63',
+      screenRef: this.screenRef,
+
+      panelRunning: !panelDone,
+      panelDone,
+      panelTally: forYou + '–' + against,
+      panelMeta: panelDone
+        ? 'PANEL OF TEN · ALL READ'
+        : 'PANEL OF TEN · ' + s.revealed + ' OF ' + this.PANEL.length + ' READ',
+      panelMetaColor: panelDone ? (won ? '#63B37F' : '#D2665F') : '#7A828B',
+      panelPips: this.PANEL.map((j, i) => ({
+        color: i >= s.revealed ? '#1B1E21' : (j.win ? '#63B37F' : '#454B52')
+      })),
+      panelRows: shown.map(j => ({
+        role: j.role, note: j.note,
+        call: j.win ? 'FOR YOU' : 'AGAINST',
+        color: j.win ? '#63B37F' : '#7A828B'
+      })),
+      skipReveal: this.skipReveal,
+      outcomeLabel: won ? 'THE PANEL FINDS FOR YOU' : 'THE PANEL FINDS AGAINST YOU',
+      outcomeColor: won ? '#63B37F' : '#D2665F',
+      outcomeHead: won ? 'You made the case' : 'Out-argued',
+
+      // §27.8.1 — deterministic, authored, no inference call.
+      debrief: unopened.map(e => {
+        const backs = (e.supports || []).indexOf(s.choice) !== -1;
+        const neutral = (e.supports || []).length === 0;
+        return {
+          title: e.title, body: e.body,
+          tag: neutral ? 'CUTS BOTH WAYS' : (backs ? 'WOULD HAVE BACKED YOU' : 'BACKED THE OTHER READING'),
+          color: neutral ? '#7A828B' : (backs ? '#63B37F' : '#D3A05B'),
+          border: backs ? 'rgba(99,179,127,.3)' : 'rgba(255,255,255,.07)'
+        };
+      }),
+      patterns: [
+        { label: 'Cites evidence it opened', value: '58%', width: '58%', bar: '#D2665F' },
+        { label: 'Uses both opened items', value: '71%', width: '71%', bar: '#D3A05B' },
+        { label: 'Names the governing rule', value: '84%', width: '84%', bar: '#63B37F' }
+      ],
 
       glossOpen: !!g, glossTerm: g ? g.term : '', glossCategory: g ? g.category : '',
       glossMeaning: g ? g.meaning : '', glossHeardAs: g ? g.heardAs : '',
@@ -1030,7 +1103,7 @@ class Component extends DCLogic {
       ticketRowLabel: subscriber ? (s.ticketSide ? s.ticketSide + ' LOCKED' : '3 LEFT') : 'LOCKED',
       ticketHeadline: subscriber ? '3 remaining' : 'Subscription required',
       ticketBody: subscriber
-        ? 'A ticket guarantees your side for the next eligible Ranked match. It changes nothing else: rating, opponent quality, evidence, and jury treatment are unaffected.'
+        ? 'A ticket guarantees your side for the next eligible Ranked match. It changes nothing else: rating, opponent quality, evidence, and panel treatment are unaffected.'
         : 'Side-Lock Tickets are part of the subscription. They sell preference over role, not competitive advantage.',
       pickDefend: () => this.setState({ ticketPick: 'DEFEND' }),
       pickChallenge: () => this.setState({ ticketPick: 'CHALLENGE' }),

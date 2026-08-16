@@ -6,7 +6,7 @@ date: 2026-08-15T14:10:00Z
 
 ### Updated in this sync
 - Blueprint gains §27 (Revision v3): AI jury panel replaces the human jury, ghost matching replaces live Ranked matchmaking, bottom nav reduced to four destinations, Daily gains a post-case analysis screen, and expected inference cost per Daily case and per Ranked match is documented.
-- Prototype still reflects the pre-§27 design (five-tab nav with Jury, human jury screen). Not yet updated.
+- Prototype rebuilt around §27: Jury screen and tab removed, ten-juror panel reveal replaces the ranked verdict, ghost-match copy on assigning counsel, new Daily analysis screen with the deterministic evidence debrief, four-tab navigation, Sunday demoted to a Home card.
 
 ### Updated in earlier sync
 - Repository contains only README.md — no UI source to recreate.
@@ -18,4 +18,5 @@ date: 2026-08-15T14:10:00Z
 | Screen | Source |
 |---|---|
 | ios-frame.jsx (device frame) | copied from sibling project 7f6db368-65e3-4e2a-a5d2-0df4430e60a5 |
+| Panel Reveal, Daily Analysis (new) | uploads/CaseDrop_Master_Blueprint_2026-08-14_v3.md §27 |
 | All screens (Home, Jury, Rank, Profile, Sunday, Case Prompt, Evidence, Decision, Argument, Submission Locked, Verdict, Learn/Review, Group Detail, Glossary sheet, Side-Lock sheet) | uploads/CaseDrop_Master_Blueprint_2026-08-14_v3.md |
