@@ -1,8 +1,9 @@
 # CaseDrop - Master Product Blueprint
 
-**Version:** 2026-08-16 v4  
+**Version:** 2026-08-16 v4.1  
 **Status:** Consolidated working product blueprint  
 **Supersedes:** `CaseDrop_Master_Blueprint_2026-08-14_v3.md`  
+**Revision:** v4.1 corrects four items found in spec review - panel-disclosure rule (§14.3), score-to-vote definition (§15.4), inference configuration separated from customer pricing (§24.1, §34), and two-phase balance validation (§20).  
 **Primary design principle:** CaseDrop should test judgment in solo play and advocacy in competitive play without turning legal ambiguity into a hidden “correct answer” quiz.
 
 ---
@@ -965,7 +966,13 @@ Consequences:
 - stored ghost scores remain reusable and auditable,
 - players cannot rely on one universal panel across every case.
 
-The exact juror-to-case mapping is not exposed to players.
+### Disclosure rule
+
+**Panel construction is deterministic and not disclosed before a player submits. After submission, the jurors evaluating that case are revealed as part of the verdict. Knowledge of panel composition must not alter the evidence, argument limit, or scoring rubric available to the player.**
+
+Before playing, the panel is not something a player can inspect and optimise against. After playing, its composition becomes legible feedback - which is the point of §16.
+
+A player who eventually remembers that a given case is read by a Formalist and two Evidence-first jurors is learning to adapt advocacy to different standards of evaluation. That is a desirable outcome, not an exploit, because panel knowledge changes nothing about what the player is given or how the rubric scores them.
 
 ---
 
@@ -1066,6 +1073,66 @@ Independent scoring is preferred because:
 - scores are comparable across matches under the same scoring version,
 - auditing is easier,
 - inference cost is lower over time.
+
+---
+
+## 15.4 Juror Call, Panel Tally, and Score Margin
+
+Independent scoring produces a score per juror per argument. The reveal in §16 presents a
+per-juror *call*. Three distinct concepts sit between them and must not be conflated.
+
+| Concept | Definition |
+|---|---|
+| **Juror call** | Which argument scored higher for that one juror |
+| **Panel tally** | How many jurors favoured each argument |
+| **Score margin** | How far apart the two arguments actually were |
+
+### Juror call
+
+For each juror `J` on the case panel:
+
+```text
+liveScore  = score(J, liveArgument)
+ghostScore = score(J, ghostArgument)
+
+if liveScore - ghostScore >  epsilon  -> J calls LIVE
+if ghostScore - liveScore >  epsilon  -> J calls GHOST
+otherwise                             -> J ABSTAINS
+```
+
+**Ties are never broken randomly.** A random tiebreak destroys determinism, which is the
+property the deterministic panel (§14.3) exists to guarantee. A juror who cannot separate the
+two arguments abstains, and the abstention is displayed.
+
+`epsilon` is a **tunable**, not an invariant. It is defined on the juror score scale and is
+recorded in the scoring version.
+
+### Panel tally
+
+```text
+LIVE      6
+GHOST     3
+TIED      1
+```
+
+The verdict is the higher call count. If call counts are equal, the higher aggregate score wins.
+If aggregate scores are also within `epsilon`, the match is a **draw**, and rating movement for
+a draw is governed by the rating formula (**TBD**, §37.2).
+
+### Score margin
+
+The tally alone can misrepresent the result. Ten jurors each separating the arguments by a hair
+produces the same `10-0` as ten jurors finding one argument far stronger. Those are not the same
+outcome and the display must not imply they are.
+
+The reveal therefore shows tally **and** margin together:
+
+```text
+10-0   +2.1     narrowly, on every lens
+10-0  +24.8     decisively, on every lens
+```
+
+Victory magnitude and panel tally must never contradict each other on screen.
 
 ---
 
@@ -1275,9 +1342,22 @@ This is necessary to detect overpowered or over-served stored arguments.
 
 ---
 
-# 20. Pre-Ship Ranked Validation
+# 20. Ranked Validation - Two Phases
 
-Before a case enters serious Ranked rotation:
+Balance validation happens in two phases. The first is possible before launch. The second is not,
+and must not be written as though it were.
+
+## 20.1 Pre-Ranked Validation
+
+Possible entirely offline, before the case reaches a population:
+
+```text
+author review
+  -> small human playtest sample
+  -> AI-panel side-bias tests
+  -> bundle tests
+  -> eligible for initial Ranked
+```
 
 1. Author strong submissions for both sides.
 2. Run them through the current scoring system.
@@ -1285,7 +1365,30 @@ Before a case enters serious Ranked rotation:
 4. Confirm neither side systematically receives a scoring advantage.
 5. Confirm no one evidence bundle dominates.
 6. Confirm the panel critiques advocacy rather than conclusion popularity.
-7. Confirm the case's natural human split remains within a reasonable ambiguity band for the intended mode.
+7. Assess natural-position ambiguity through authored review and playtest sampling.
+
+**Step 7 is an assessment, not a measurement.** A new case with 17 testers splitting 11/6 does not
+establish that the population splits 65/35. The `60/40` figure in §5 is an **authoring target**,
+not a launch invariant, and no case should be blocked from Ranked solely because a small playtest
+sample fell outside the band.
+
+## 20.2 Live Validation
+
+Only possible after real participation:
+
+```text
+real Daily submissions
+  -> natural opinion distribution emerges
+  -> Ranked side/bundle performance emerges
+  -> retain / rebalance / suspend
+```
+
+**Once sufficient Daily participation is collected, the observed human split becomes the
+authoritative population metric.** Until then the case carries a provisional assessment only.
+
+The participation level that counts as sufficient is **TBD** (§37.2).
+
+## 20.3 Intervention
 
 If one side wins materially more often under offline validation:
 
@@ -1496,6 +1599,30 @@ Subscribers may receive:
 - cross-case reasoning-pattern tracking,
 - uncapped Ranked play,
 - other non-competitive convenience or review features later.
+
+---
+
+## 24.1 CaseDrop Plus - Customer Pricing
+
+**Commercial configuration.** This is what a customer pays CaseDrop. It is unrelated to what
+CaseDrop pays an inference provider (§34) - those are two independent decisions and must not be
+reconciled against each other in this document.
+
+```text
+CASEDROP PLUS
+
+Monthly      $7.99
+Annual      $49.99   (~$4.17 / month)
+```
+
+Entitlements are those listed above in §24, plus the uncapped Ranked play defined in §25.
+
+Price is a commercial configuration value. Changing it requires no change to competitive rules,
+scoring, or `scoringVersionId`.
+
+---
+
+## 24.2 What Subscribers Must Not Receive
 
 Subscribers must not receive:
 
@@ -2640,78 +2767,92 @@ Use the structures defined in §32.13.
 
 ---
 
-# 34. Inference Cost Planning
+# 34. Inference Configuration and Cost Model
 
-The figures below are retained as **planning assumptions from the 2026-08 v3 revision**. They are not product rules and should be revalidated whenever model pricing or token behavior changes.
+This section records the **current implementation default** and the **method** for computing cost.
+It deliberately does not hardcode a monthly projection, because a hardcoded projection is stale the
+moment token counts or provider rates move.
 
-Pricing basis recorded in the source blueprint:
-
-| Model | Input / MTok | Output / MTok | Min cacheable prefix |
-|---|---:|---:|---:|
-| Claude Opus 5 | $5.00 | $25.00 | 512 |
-| Claude Sonnet 5 | $3.00 | $15.00 | 1,024 |
-| Claude Haiku 4.5 | $1.00 | $5.00 | 4,096 |
+Customer subscription pricing is **not** in this section. It is a separate commercial decision and
+lives in §24.1.
 
 ---
 
-## 34.1 Ranked Planning Estimate
-
-Source assumptions:
-
-- ~3,500 cached-prefix tokens,
-- ~1,000 uncached tokens,
-- ~600 output tokens,
-- one panel call rather than ten separate calls.
-
-Recorded estimates:
-
-| Model | Head-to-head | Independent scoring |
-|---|---:|---:|
-| Claude Opus 5 | ~$0.022 | ~$0.019 |
-| Claude Sonnet 5 | ~$0.013 | ~$0.011 |
-| Claude Haiku 4.5 | ~$0.0075 | ~$0.0065 |
-
-The important architectural conclusion remains:
-
-> **Independent scoring becomes cheaper over time because ghost scores are reusable.**
-
----
-
-## 34.2 Daily Planning Estimate
-
-Deterministic evidence debrief:
+## 34.1 Current Inference Configuration
 
 ```text
-$0 inference cost
+CURRENT INFERENCE CONFIGURATION
+
+Provider:                  OpenAI
+Default evaluation model:  GPT-5 nano
+
+Used for:
+  - Ranked panel scoring
+  - Daily premium analysis
+
+Not used for:
+  - Deterministic evidence debrief  (no inference required, §22.1)
 ```
 
-Recorded model-analysis estimates:
+Published rate at time of writing:
 
-| Model | Cost per analyzed Daily case |
+| | Per 1M tokens |
 |---|---:|
-| Claude Opus 5 | ~$0.011 |
-| Claude Sonnet 5 | ~$0.0067 |
-| Claude Haiku 4.5 | ~$0.0045 |
+| Input | $0.05 |
+| Cached input | $0.005 |
+| Output | $0.40 |
+
+Rates are an operational parameter. Verify against the provider's current published pricing
+before relying on any figure here.
 
 ---
 
-## 34.3 Recorded 10,000-DAU Projection
+## 34.2 Cost Model
 
-Source scenario:
+Cost is computed, not quoted:
 
-- 10,000 daily active users,
-- one Daily case per user,
-- three Ranked matches per user per day.
+```text
+C = (N_cached x P_cached) + (N_input x P_input) + (N_output x P_output)
+```
 
-Recorded projection:
+Measured production token counts feed the economics dashboard. Do not carry planning estimates
+forward as though they were measurements.
 
-| Model | Per day | Per month | Per user / month |
-|---|---:|---:|---:|
-| Claude Opus 5 | ~$766 | ~$23,000 | ~$2.30 |
-| Claude Sonnet 5 | ~$460 | ~$13,800 | ~$1.38 |
-| Claude Haiku 4.5 | ~$270 | ~$8,100 | ~$0.81 |
+Per-unit costs worth tracking separately:
 
-These numbers motivated the free Ranked cap in §25.
+- cost per Ranked match (live argument scored; ghost score reused),
+- cost per Ranked match requiring a ghost re-score,
+- cost per analysed Daily case,
+- cost per free user per day,
+- cost per subscriber per day.
+
+---
+
+## 34.3 Model Changes Are Scoring-Version Changes
+
+> **COMPETITIVE INVARIANT**
+>
+> A live score may only be compared against a ghost score generated under the same
+> `scoringVersionId`.
+
+The evaluation model is part of the scoring version (§33.4). Therefore:
+
+**A model or provider change may occur without altering any competitive rule, but any model change
+that affects scoring requires a new `scoringVersionId` and re-scoring of eligible ghosts.**
+
+Without this rule, a provider swap silently produces matches where:
+
+```text
+ghost = scored by the old model
+live  = scored by the new model
+```
+
+which reintroduces exactly the comparability failure that deterministic panels (§14.3) and
+independent scoring (§15.2) exist to eliminate. This is a database-level constraint, not a
+recommendation - a comparison across scoring versions must be rejected by the data layer, not
+merely avoided by convention.
+
+The re-scoring policy for existing ghosts on a version change remains **TBD** (§37.2).
 
 ---
 
@@ -2719,10 +2860,11 @@ These numbers motivated the free Ranked cap in §25.
 
 - Put stable case text, evidence set, and rubric in the cacheable prefix.
 - Keep volatile argument content after the stable prefix.
-- Do not make ten separate API calls when one structured panel call can return all juror outputs.
+- Do not make ten separate API calls when one structured panel call returns all juror outputs.
 - Reuse stored ghost scores under the same case and scoring version.
-- Make cache minimums explicit in implementation tests so a supposedly cached prompt does not silently bill at full input rate.
-- Treat pricing as an operational parameter, not a fixed gameplay assumption.
+- Assert cache minimums in implementation tests, so a supposedly cached prompt cannot silently
+  bill at full input rate.
+- Treat pricing as an operational parameter, never as a gameplay assumption.
 
 ---
 
@@ -2845,6 +2987,12 @@ The phases may overlap technically, but product testing should preserve this dep
 - Sunday surfaced from Home,
 - Groups remain embedded.
 
+### Implementation defaults and commercial config
+
+- evaluation model: OpenAI GPT-5 nano (§34.1) - an implementation default, changeable under §34.3,
+- CaseDrop Plus: $7.99 / month, $49.99 / year (§24.1) - a commercial configuration value,
+- a model change that affects scoring requires a new `scoringVersionId` and ghost re-scoring (§34.3).
+
 ### Visual
 
 - near-black / dark editorial system,
@@ -2877,9 +3025,10 @@ The phases may overlap technically, but product testing should preserve this dep
 - exact Side-Lock Ticket allowance,
 - Side-Lock regeneration schedule,
 - exact free Ranked daily cap,
-- exact subscription price and entitlement packaging,
-- final AI model/provider,
-- final scoring rubric,
+- final scoring rubric and juror weight vectors,
+- `epsilon` value for the juror-call abstention band (§15.4),
+- rating movement for a drawn match (§15.4),
+- Daily participation level that makes a human split authoritative (§20.2),
 - final 24-juror roster,
 - ghost rating reuse / anti-farming guard,
 - ghost exposure limits,
@@ -2968,3 +3117,53 @@ This appendix is non-normative. It records what was rewritten or deleted so impl
 This file is the consolidated source of truth for the CaseDrop product direction as of **2026-08-16**.
 
 If an older CaseDrop blueprint, prototype note, or design instruction conflicts with this file, this file governs unless a later dated revision explicitly supersedes it.
+
+---
+
+# Appendix C - Decision Log
+
+Non-normative. Records decisions and the analysis behind them, so the normative sections above can
+state the decision without carrying the comparison that produced it.
+
+## C.1 Evaluation model selection (2026-08-16)
+
+**Decision:** OpenAI GPT-5 nano for Ranked panel scoring and Daily premium analysis.
+
+A ten-juror panel scoring a 60-word argument against a fixed rubric is a small, highly structured
+task. Model spend is better directed at offline case validation (§20.1), where volume is low and
+judgment quality matters most, than at per-match scoring.
+
+Per-match estimates considered, on the v3 token assumptions (~3,500 cached prefix, ~1,000 uncached,
+~600 output, one panel call):
+
+| Model | Per Ranked match | Per analysed Daily case |
+|---|---:|---:|
+| GPT-5 nano | ~$0.0003 | ~$0.0002 |
+| GPT-5.6 Luna | ~$0.0010 | ~$0.0005 |
+| GPT-5.4-mini | ~$0.0037 | ~$0.0019 |
+| Claude Haiku 4.5 | ~$0.0075 | ~$0.0045 |
+| Claude Sonnet 5 | ~$0.0131 | ~$0.0067 |
+| Claude Opus 5 | ~$0.0218 | ~$0.0112 |
+
+**Open risk:** these are price comparisons only. Whether GPT-5 nano judges legal advocacy well
+enough to carry the rating ladder is unverified. Before production, build a calibration set of
+200-300 matchups with human rankings and measure each candidate model's agreement rate. Buy the
+cheapest model that clears the quality bar, not the cheapest model. A panel that judges badly makes
+every rating in the product meaningless, and that failure is invisible in a cost spreadsheet.
+
+## C.2 Independent scoring over head-to-head (2026-08-16)
+
+**Decision:** independent scoring (§15.2).
+
+Ghost scores become reusable, ordering bias is structurally impossible rather than mitigated, and
+scores stay comparable across matches under one scoring version. The per-call saving is modest; the
+architectural properties are the reason.
+
+## C.3 Deterministic per-case panels (2026-08-16)
+
+**Decision:** seed the 10-juror panel from `hash(caseId + scoringVersionId)` (§14.3).
+
+An earlier draft drew 10 fresh jurors from the roster per match, to make the panel hard to
+reverse-engineer. That is incompatible with independent scoring: a ghost scored under one panel is
+not comparable to a live argument scored under another. Determinism won; the disclosure question is
+handled by §14.3's disclosure rule instead.
