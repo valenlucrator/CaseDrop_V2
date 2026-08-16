@@ -754,18 +754,18 @@ class Component extends DCLogic {
 
   EVIDENCE = {
     ranked: [
-      { id: 'E1', supports: ['a'], kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
-      { id: 'E2', supports: ['b'], kind: 'Turnstile and door reads for the evening.', title: 'Badge Access Log', body: 'Lobby turnstile 20:14. Fourth-floor door 20:17. Records room 20:19. Exit 20:36. Badge credential active throughout.' },
-      { id: 'E5', supports: ['b'], kind: 'After-hours and records room rules.', title: 'Employee Handbook §7.2', body: 'After-hours access is limited to work assigned in advance. Records room entry requires a logged business purpose. Employees are responsible for company notices sent to their work address.', term: true },
-      { id: 'E7', supports: [], kind: 'From the guard on duty that night.', title: 'Security Guard Statement', body: 'Guard says he recognised her, said good evening, and raised no objection. He had received no list of departed employees that day.' },
-      { id: 'E9', supports: [], kind: 'Lobby camera frame at the time of entry.', title: 'Lobby Camera Still', body: 'Frame at 20:14 shows her carrying an empty personal box and a coat. No bag large enough for files.' }
+      { id: 'E1', wouldHaveSupported: ['a'], kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
+      { id: 'E2', wouldHaveSupported: ['b'], kind: 'Turnstile and door reads for the evening.', title: 'Badge Access Log', body: 'Lobby turnstile 20:14. Fourth-floor door 20:17. Records room 20:19. Exit 20:36. Badge credential active throughout.' },
+      { id: 'E5', wouldHaveSupported: ['b'], kind: 'After-hours and records room rules.', title: 'Employee Handbook §7.2', body: 'After-hours access is limited to work assigned in advance. Records room entry requires a logged business purpose. Employees are responsible for company notices sent to their work address.', term: true },
+      { id: 'E7', wouldHaveSupported: [], kind: 'From the guard on duty that night.', title: 'Security Guard Statement', body: 'Guard says he recognised her, said good evening, and raised no objection. He had received no list of departed employees that day.' },
+      { id: 'E9', wouldHaveSupported: [], kind: 'Lobby camera frame at the time of entry.', title: 'Lobby Camera Still', body: 'Frame at 20:14 shows her carrying an empty personal box and a coat. No bag large enough for files.' }
     ],
     daily: [
-      { id: 'E1', supports: ['b'], kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
-      { id: 'E3', supports: ['a'], kind: 'The badge and account revocation task.', title: 'IT Deactivation Ticket', body: 'Opened 17:11, priority normal, scheduled for 09:00 the following morning. Badge and account deactivation grouped in one task.' },
-      { id: 'E4', supports: ['a'], kind: 'Between the employee and her manager.', title: 'Manager Messages', body: 'At 16:52 the manager wrote: grab your things whenever, no rush. Sent nine minutes before the termination email. No later message retracts it.' },
-      { id: 'E6', supports: ['b'], kind: 'Inventory taken the next morning.', title: 'Records Room Audit', body: 'Inventory shows nothing missing. Two folders were out of sequence on the shelf nearest the door.' },
-      { id: 'E8', supports: ['a'], kind: 'Work mail sessions on her own phone.', title: 'Personal Phone Records', body: 'Work mail application opened 23:41. No earlier session that evening. Push notifications for the work account were disabled 6 March.' }
+      { id: 'E1', wouldHaveSupported: ['b'], kind: 'Sent at 17:03 with delivery receipt.', title: 'Termination Email', body: 'Confirms termination and states: do not access company offices or systems. Delivery receipt recorded 17:03. No read receipt requested.' },
+      { id: 'E3', wouldHaveSupported: ['a'], kind: 'The badge and account revocation task.', title: 'IT Deactivation Ticket', body: 'Opened 17:11, priority normal, scheduled for 09:00 the following morning. Badge and account deactivation grouped in one task.' },
+      { id: 'E4', wouldHaveSupported: ['a'], kind: 'Between the employee and her manager.', title: 'Manager Messages', body: 'At 16:52 the manager wrote: grab your things whenever, no rush. Sent nine minutes before the termination email. No later message retracts it.' },
+      { id: 'E6', wouldHaveSupported: ['b'], kind: 'Inventory taken the next morning.', title: 'Records Room Audit', body: 'Inventory shows nothing missing. Two folders were out of sequence on the shelf nearest the door.' },
+      { id: 'E8', wouldHaveSupported: ['a'], kind: 'Work mail sessions on her own phone.', title: 'Personal Phone Records', body: 'Work mail application opened 23:41. No earlier session that evening. Push notifications for the work account were disabled 6 March.' }
     ]
   };
 
@@ -1072,8 +1072,8 @@ class Component extends DCLogic {
 
       // §27.8.1 — deterministic, authored, no inference call.
       debrief: unopened.map(e => {
-        const backs = (e.supports || []).indexOf(s.choice) !== -1;
-        const neutral = (e.supports || []).length === 0;
+        const backs = (e.wouldHaveSupported || []).indexOf(s.choice) !== -1;
+        const neutral = (e.wouldHaveSupported || []).length === 0;
         return {
           title: e.title, body: e.body,
           tag: neutral ? 'CUTS BOTH WAYS' : (backs ? 'WOULD HAVE BACKED YOU' : 'BACKED THE OTHER READING'),
