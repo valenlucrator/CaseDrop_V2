@@ -1,9 +1,9 @@
 # CaseDrop - Master Product Blueprint
 
-**Version:** 2026-08-16 v4.1  
+**Version:** 2026-08-16 v4.2  
 **Status:** Consolidated working product blueprint  
 **Supersedes:** `CaseDrop_Master_Blueprint_2026-08-14_v3.md`  
-**Revision:** v4.1 corrects four items found in spec review - panel-disclosure rule (§14.3), score-to-vote definition (§15.4), inference configuration separated from customer pricing (§24.1, §34), and two-phase balance validation (§20).  
+**Revision:** v4.2 splits player rating from ghost strength rating (§13.5), sets a drawn match at 0.5 (§15.4), adds the scoring-version lifecycle (§33.4), and corrects the epsilon unit error in the aggregate draw band (§15.4). v4.1 corrected four items found in spec review - panel-disclosure rule (§14.3), score-to-vote definition (§15.4), inference configuration separated from customer pricing (§24.1, §34), and two-phase balance validation (§20).  
 **Primary design principle:** CaseDrop should test judgment in solo play and advocacy in competitive play without turning legal ambiguity into a hidden “correct answer” quiz.
 
 ---
@@ -842,15 +842,51 @@ more play
 
 ---
 
-## 13.5 Rating Interaction
+## 13.5 Rating Interaction - Two Separate Ratings
 
-The current product direction is that rated player ghosts may participate in rating movement when their stored argument is judged again.
+An archived ghost must **never** repeatedly modify its author's active personal rating. A player
+asleep for eight hours should not wake to a rating changed by a submission they wrote last week.
 
-This requires implementation safeguards against repeated farming, overexposure, or one static submission generating disproportionate rating movement.
+CaseDrop therefore keeps two ratings:
 
-The exact ghost-rating reuse guard remains **TBD before production launch**.
+| Rating | Belongs to | Moves when |
+|---|---|---|
+| **PlayerRating** | a player | that player actively submits Ranked play |
+| **GhostStrengthRating** | one archived submission | that submission is faced again |
 
-At minimum, the system must record:
+A new ghost initialises at its author's PlayerRating at time of submission:
+
+```text
+author PlayerRating at submission   1,520
+  -> ghostStrength initial          1,520
+```
+
+Thereafter the ghost's strength evolves on its own record:
+
+```text
+Ghost #8FD21
+  initial            1,520
+  current strength   1,684
+  71% over 94 appearances
+```
+
+That improves the **ghost's matchmaking strength estimate**, which is what selection actually needs,
+and it leaves the author's personal rating untouched.
+
+For the live player's match, standard expected-score arithmetic is applied against the ghost's
+*current strength rating*:
+
+```text
+WIN   -> actual = 1.0
+DRAW  -> actual = 0.5
+LOSS  -> actual = 0.0
+```
+
+This resolves the farming problem structurally rather than by capping exposure. There is no reward
+for repeatedly facing a strong ghost, because no personal rating is being harvested — and an
+over-strong ghost self-corrects by rising out of the band where it is selected.
+
+The system must record:
 
 - ghost submission ID,
 - owner player ID,
@@ -1116,8 +1152,21 @@ TIED      1
 ```
 
 The verdict is the higher call count. If call counts are equal, the higher aggregate score wins.
-If aggregate scores are also within `epsilon`, the match is a **draw**, and rating movement for
-a draw is governed by the rating formula (**TBD**, §37.2).
+If aggregate scores are also within the aggregate band, the match is a **draw**, worth **0.5** under
+standard expected-score arithmetic (§13.5).
+
+### Unit discipline
+
+`epsilon` is defined on the single-juror scale. The aggregate margin is on the panel scale. They are
+not interchangeable:
+
+| Band | Value |
+|---|---|
+| Juror abstention | `epsilon` |
+| Aggregate draw | `epsilon x panelSize` |
+
+Comparing a juror-scale `epsilon` against an aggregate-scale margin lets a fractional per-juror edge
+decide a tallied tie. With 10 jurors and `epsilon = 1` the aggregate draw band is **+/-10**.
 
 ### Score margin
 
@@ -1128,9 +1177,11 @@ outcome and the display must not imply they are.
 The reveal therefore shows tally **and** margin together:
 
 ```text
-10-0   +2.1     narrowly, on every lens
-10-0  +24.8     decisively, on every lens
+8-2   +12      narrowly
+8-2   +71      decisively
 ```
+
+Stored margins are integers. A derived mean may be displayed; the persisted value is the integer.
 
 Victory magnitude and panel tally must never contradict each other on screen.
 
@@ -2729,11 +2780,27 @@ type ScoringVersion = {
   id: string;
   rubricVersion: string;
   modelId: string;
+  providerId: string;
   jurorRosterVersion: string;
   casePanelSeedRuleVersion: string;
+  epsilon: number;
+  status: "draft" | "calibrating" | "backfilling" | "active" | "retired";
   createdAt: string;
+  activatedAt: string | null;
+  retiredAt: string | null;
 };
 ```
+
+A new version is prepared, backfilled across the eligible ghost library, and only then activated
+atomically. Lazy migration is prohibited - it would split the ghost library across versions, and
+under §34.3 a split library is silently unmatchable.
+
+> **COMPETITIVE INVARIANT**
+>
+> At most one scoring version is `active`. Live scoring uses the active version only. Ghost
+> selection may return only submissions holding a score under the active version.
+
+Scores under a retired version are retained as the audit record for matches already played.
 
 ---
 
@@ -2972,6 +3039,9 @@ The phases may overlap technically, but product testing should preserve this dep
 - reset after streak breaks,
 - hidden assignment probabilities,
 - ghost matching,
+- player rating and ghost strength rating are separate (§13.5),
+- a drawn match is worth 0.5,
+- five rubric dimensions: grounding, rule connection, coherence, calibration, ambiguity handling,
 - 60-word cap,
 - AI panel,
 - independent scoring preferred,
@@ -2989,7 +3059,8 @@ The phases may overlap technically, but product testing should preserve this dep
 
 ### Implementation defaults and commercial config
 
-- evaluation model: OpenAI GPT-5 nano (§34.1) - an implementation default, changeable under §34.3,
+- evaluation model: OpenAI, GPT-5 nano as the leading candidate (§34.1) - an implementation
+  default gated on calibration, changeable under §34.3,
 - CaseDrop Plus: $7.99 / month, $49.99 / year (§24.1) - a commercial configuration value,
 - a model change that affects scoring requires a new `scoringVersionId` and ghost re-scoring (§34.3).
 
@@ -3025,13 +3096,14 @@ The phases may overlap technically, but product testing should preserve this dep
 - exact Side-Lock Ticket allowance,
 - Side-Lock regeneration schedule,
 - exact free Ranked daily cap,
-- final scoring rubric and juror weight vectors,
+- final juror weight vectors (the five rubric dimensions are locked),
+- final evaluation model - benchmark GPT-5 nano / GPT-5.4 nano / GPT-5.6 Luna against a
+  200-300 matchup calibration set,
 - `epsilon` value for the juror-call abstention band (§15.4),
-- rating movement for a drawn match (§15.4),
+
 - Daily participation level that makes a human split authoritative (§20.2),
 - final 24-juror roster,
-- ghost rating reuse / anti-farming guard,
-- ghost exposure limits,
+- GhostStrengthRating update formula and K-factor,
 - re-scoring policy when scoring versions change,
 - Sunday rules and rewards,
 - final rating formula,

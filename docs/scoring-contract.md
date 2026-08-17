@@ -1,8 +1,8 @@
 # CaseDrop Ranked Scoring Contract
 
-**Version:** 1.0-draft
-**Status:** Proposal — requires sign-off before any real ghost score is persisted
-**Governed by:** `uploads/CaseDrop_Master_Blueprint_2026-08-16_v4.1.md` §14, §15, §17, §33, §34
+**Version:** 1.1-draft
+**Status:** Approved to build against. Weights and model selection remain gated on calibration (§8).
+**Governed by:** `uploads/CaseDrop_Master_Blueprint_2026-08-16_v4.2.md` §14, §15, §17, §33, §34
 
 This is an **implementation specification**, not product philosophy. Where it conflicts with the
 blueprint, the blueprint governs.
@@ -78,7 +78,23 @@ juror lens. One rubric, many readings — this is what makes a 6–4 split legib
 | 2 | Rule connection | `rule` | Is evidence connected to the governing rule, not just recited? |
 | 3 | Coherence | `coherence` | Does the argument hold together as a structure? |
 | 4 | Calibration | `calibration` | Does it avoid overstating what the evidence proves? |
-| 5 | Ambiguity handling | `ambiguity` | Does it engage the weak side of its own case? |
+| 5 | Ambiguity handling | `ambiguity` | Does it address material uncertainty appropriately? |
+
+### Anti-farming definitions
+
+Both of the last two dimensions are gameable if defined loosely. The juror prompt must carry these
+qualifications verbatim:
+
+> **Ambiguity handling** does not require an explicit concession or counterargument. It rewards
+> appropriately addressing uncertainty **where material**. An argument facing no material
+> uncertainty is not penalised for failing to manufacture one.
+
+> **Calibration** measures **overclaiming**. It does not reward timid or hedged language. An
+> argument that states exactly what its evidence supports scores full marks; an argument that
+> hedges a well-supported claim is not scoring better than one that asserts it.
+
+Without these, players discover that spending one sentence on *"Although X..."* farms dimension 5,
+and that hedging everything farms dimension 4. Both would reward ritual rather than advocacy.
 
 Every dimension is an **advocacy** measure. None asks whether the position is correct (§17).
 
@@ -97,8 +113,8 @@ Integers summing to 100.
 | Plain-reader | 15 | 15 | 45 | 10 | 15 |
 | Contrarian | 20 | 15 | 15 | 20 | 30 |
 
-> **Proposal, not decided.** These vectors are a starting point. §37.2 lists the final rubric and
-> weights as TBD. The contract is valid under any weight set; only the numbers change.
+> **Calibration inputs, not production weights.** The contract is valid under any weight set that
+> sums to 100 per juror; only the numbers change. See §8.
 
 ### Score arithmetic
 
@@ -230,12 +246,16 @@ def verdict(live: list[int], ghost: list[int], epsilon: int) -> Verdict:
 
     live_calls  = calls.count("LIVE")
     ghost_calls = calls.count("GHOST")
-    margin      = sum(live) - sum(ghost)          # signed, 0..±200
+    margin      = sum(live) - sum(ghost)          # signed integer, -200..200
 
-    if   live_calls > ghost_calls: outcome = "LIVE"
-    elif ghost_calls > live_calls: outcome = "GHOST"
-    elif abs(margin) > epsilon:    outcome = "LIVE" if margin > 0 else "GHOST"
-    else:                          outcome = "DRAW"
+    # epsilon is defined on the SINGLE-JUROR 0..20 scale. The margin is on the
+    # 10-juror 0..200 aggregate scale. Comparing them directly is a unit error.
+    aggregate_epsilon = epsilon * len(live)       # 10 jurors, eps=1 -> band +/-10
+
+    if   live_calls > ghost_calls:        outcome = "LIVE"
+    elif ghost_calls > live_calls:        outcome = "GHOST"
+    elif abs(margin) > aggregate_epsilon: outcome = "LIVE" if margin > 0 else "GHOST"
+    else:                                 outcome = "DRAW"
 
     return Verdict(outcome, calls, live_calls, ghost_calls,
                    calls.count("ABSTAIN"), margin)
@@ -244,11 +264,41 @@ def verdict(live: list[int], ghost: list[int], epsilon: int) -> Verdict:
 Implements §15.4. Ties abstain rather than coin-flip, because a coin-flip would break INV-3's
 determinism guarantee at the last step.
 
-`epsilon` is a **tunable** recorded in the scoring version. Proposed default: **1** on the 0–20
-juror scale.
+### Unit discipline
 
-**The reveal must show tally and margin together** (§15.4). `10–0 +2.1` and `10–0 +24.8` are
-different results and the UI must not render them identically.
+`epsilon` is defined on the **single-juror 0–20 scale**. Two bands derive from it:
+
+| Band | Value | Applies to |
+|---|---|---|
+| Juror abstention | `epsilon` | one juror's `liveScore - ghostScore` |
+| Aggregate draw | `epsilon × panelSize` | the summed margin, `-200..200` |
+
+Comparing a juror-scale epsilon against an aggregate-scale margin is a unit error, present in
+contract v1.0. It let a 0.2-point-per-juror edge decide a tallied tie:
+
+```text
+calls tie 5-5, aggregate 127 vs 125, margin +2
+
+  band +/-1    ->  LIVE     wrong: 0.2 pts/juror decides the match
+  band +/-10   ->  DRAW     correct
+```
+
+Multiplying by panel size is arithmetically equivalent to comparing the *mean* juror margin against
+`epsilon`, while preserving the no-float invariant.
+
+`epsilon` is a **tunable** recorded in the scoring version. Calibration default: **1**. This is not
+a production decision — see §8.
+
+**The reveal must show tally and margin together** (§15.4). Two matches can share a tally and
+differ greatly in separation:
+
+```text
+8-2   +12      narrowly
+8-2   +71      decisively
+```
+
+The **stored** margin is always an integer on the 0–200 aggregate scale. A derived mean
+(`+1.2 avg / juror`) may be displayed, but the canonical persisted value is the integer.
 
 ### Note: `epsilon` and margin overlap more than expected
 
@@ -282,31 +332,129 @@ type ScoringVersion = {
   jurorRosterVersion: string;       // the ~24-juror roster
   casePanelSeedRuleVersion: string; // deterministicPanel() algorithm
   epsilon: number;                  // juror-call abstention band
+  status: "draft" | "calibrating" | "backfilling" | "active" | "retired";
   createdAt: string;
+  activatedAt: string | null;
+  retiredAt: string | null;
 };
 ```
 
-**Any field changing mints a new `id`.** Including `modelId` — that is §34.3, and it is the reason
-this object exists.
+**Any field changing mints a new `id`.** Including `modelId` — that is blueprint §34.3, and it is the
+reason this object exists.
 
-On a new version: existing ghost scores are not deleted, they become **ineligible for comparison**
-under the new version. Re-scoring policy is TBD (§37.2). Until decided, the safe default is that a
-ghost without a score under the current version is not selectable.
+### Migration: prepare → backfill → activate
+
+A new version is **never** switched on directly. Lazy migration is prohibited: it would leave the
+ghost library split across two versions, and under INV-1 a split library means large parts of it are
+unmatchable with no warning.
+
+```text
+CREATE sv_02
+    |
+    v
+status = CALIBRATING        run the eval gate (§8)
+    |  pass
+    v
+status = BACKFILLING        re-score the eligible ghost library under sv_02
+    |
+    v
+verify ghost coverage       every active case x side x bundle has ghosts
+    |
+    v
+ATOMIC ACTIVATION           sv_02 -> ACTIVE, sv_01 -> RETIRED
+```
+
+### Enforced rules
+
+> **INV-5.** At most one scoring version has `status = 'active'`.
+
+> **INV-6.** Ranked live scoring may use the ACTIVE version only.
+
+> **INV-7.** Ghost selection may return only submissions holding a score under the ACTIVE version.
+
+INV-5 is a partial unique index, not application logic. INV-7 is why backfill must complete before
+activation: activating early does not corrupt data, but it empties the opponent pool.
+
+Scores under a retired version are **retained, never deleted** — they remain the audit record for
+matches already played under that version.
+
+---
+
+## 7b. `deterministicPanel()`
+
+Reproducibility depends on this being specified, not merely described.
+
+```
+deterministicPanel(caseId, scoringVersionId) -> JurorId[10]
+
+  roster  = jurors WHERE roster_version = scoringVersion.jurorRosterVersion
+            ORDER BY juror_id ASC              -- stable, DB-order-independent
+  seed    = sha256(caseId || 0x00 || scoringVersionId)
+  rng     = deterministic PRNG seeded from the first 8 bytes of seed
+  panel   = partial Fisher-Yates over `roster`, taking the first 10
+  return panel                                  -- ORDER IS PART OF THE OUTPUT
+```
+
+Requirements:
+
+- `ORDER BY juror_id` before shuffling. Relying on database row order makes the panel depend on
+  physical storage and silently breaks on a restore or a replica.
+- The PRNG must be pinned and implementation-independent. Do not use the language's stdlib RNG —
+  its algorithm may change between runtime versions and would silently repanel every case.
+- **Seat order is part of the output**, not incidental. §3 requires the model's `jurors` array to
+  match panel order, and stored scores are keyed by seat index.
+- Any change to this algorithm bumps `casePanelSeedRuleVersion`, which mints a new scoring version.
+
+The computed panel is **materialised** to `case_panels` on first use, so it is auditable and
+enforceable by foreign key rather than recomputed on every call.
 
 ---
 
 ## 8. Open decisions
 
-Blocking before production:
+### Resolved
 
-1. **Final weight vectors** — §2 is a proposal.
-2. **`epsilon`** — proposed 1; needs calibration against real score distributions.
-3. **Draw rating movement** — §15.4 defines draws; the rating formula does not yet handle them.
-4. **Re-score policy on version change** — §7.
-5. **Model quality calibration** — 200–300 matchups with human rankings, measuring agreement
-   (Appendix C.1). This gates the GPT-5 nano choice itself, not just the contract.
+| Item | Decision |
+|---|---|
+| Rubric dimensions | **Locked.** The five in §2 are final. |
+| Draw rating value | **0.5.** Standard expected-score arithmetic. |
+| Re-score policy | **Prepare → backfill → activate** (§7). No lazy migration. |
+| `epsilon` unit | Juror band = `epsilon`; aggregate draw band = `epsilon × panelSize`. |
 
-Non-blocking but needed early:
+### Gated on calibration
 
-6. Rationale quality bar — how is "flag for review" in §4 adjudicated?
-7. Whether the ~24-juror roster is authored before or alongside the first Ranked case.
+**1. Evaluation model.** Not locked. Benchmark exactly three:
+
+| Candidate | Input / MTok | Output / MTok |
+|---|---:|---:|
+| GPT-5 nano | $0.05 | $0.40 |
+| GPT-5.4 nano | $0.20 | $1.25 |
+| GPT-5.6 Luna | $0.20 | $1.20 |
+
+The question is **not** which model is smartest. It is: *which is the cheapest model that passes the
+CaseDrop evaluator quality bar?*
+
+Calibration set: 200–300 matchups with human rankings. Record per candidate:
+
+- human-winner agreement
+- DEFEND-side agreement
+- CHALLENGE-side agreement
+- score correlation
+- abstention rate
+- draw rate
+- false-blowout rate
+- rationale quality
+- latency
+- cost per match
+
+**2. Weight vectors.** §2's numbers are calibration inputs, not production weights. Do not bless
+them before human-alignment data exists.
+
+**3. `epsilon`.** Default 1 for calibration. The diagnostic that matters is **abstention rate**: at
+45% the scoring is not discriminating or the band is too wide; at 1% the band is meaningless. Let
+the test set choose between 0, 1, and 2.
+
+### Non-blocking
+
+4. Rationale quality bar — how "flag for review" (§4) is adjudicated.
+5. Whether the ~24-juror roster is authored before or alongside the first Ranked case.
