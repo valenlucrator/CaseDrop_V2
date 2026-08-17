@@ -311,7 +311,13 @@ decisive sweep   (18 vs  8 on every juror)   ->  10–0,  0 abstain, +100 margin
 ```
 
 `epsilon` does most of the work the margin display was introduced to do — a near-tie surfaces as
-mass abstention rather than a fake landslide. Margin remains useful as secondary information (two
+mass abstention rather than a fake landslide.
+
+A related property, confirmed in `server/test/scoring.test.ts`: a **uniform edge of exactly
+`epsilon` per juror is a DRAW**. Every juror abstains, and the aggregate margin lands exactly on
+`epsilon × panelSize`, which is not *greater than* the band. This is the desired behaviour — if no
+single juror could separate the two arguments, the panel as a whole has not separated them either.
+A uniform edge of `epsilon + 1` on even half the panel does resolve. Margin remains useful as secondary information (two
 matches can both be `8–2` with very different separations), but it is no longer the primary guard
 against a lying tally.
 
