@@ -364,7 +364,7 @@
 <sc-if value="{{ sVerdictRanked }}" hint-placeholder-val="{{ false }}">
 <div data-screen-label="Panel Reveal" style="flex:1;overflow:auto;padding:62px 22px 34px;display:flex;flex-direction:column;gap:24px">
 
-<div style="display:flex;flex-direction:column;gap:14px">
+<div style="position:sticky;top:-62px;z-index:5;background:#0B0C0D;margin:-62px -22px 0;padding:62px 22px 16px;display:flex;flex-direction:column;gap:14px">
 <div style="display:flex;align-items:center;justify-content:space-between">
 <div style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:{{ panelMetaColor }}">{{ panelMeta }}</div>
 <sc-if value="{{ panelRunning }}" hint-placeholder-val="{{ true }}">
@@ -373,11 +373,19 @@
 </div>
 <div style="display:flex;align-items:baseline;gap:14px">
 <div style="font:600 68px/0.9 'JetBrains Mono',monospace;letter-spacing:-0.04em">{{ panelTally }}</div>
+<div style="display:flex;flex-direction:column;gap:5px">
 <div style="font:400 15px/1 'JetBrains Mono',monospace;color:#7A828B">panel vote</div>
+<sc-if value="{{ panelDone }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#565C63">{{ panelMargin }} · {{ panelSeparation }}</div>
+</sc-if>
+<sc-if value="{{ panelHasAbstained }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#565C63">{{ panelAbstained }}</div>
+</sc-if>
+</div>
 </div>
 <div style="display:flex;gap:3px;height:6px">
 <sc-for list="{{ panelPips }}" as="p" hint-placeholder-count="10">
-<div style="flex:1;background:{{ p.color }};border-radius:2px"></div>
+<div style="flex:1;background:{{ p.color }};border-radius:2px;animation:{{ p.anim }};transition:background-color .4s ease"></div>
 </sc-for>
 </div>
 </div>
@@ -386,10 +394,10 @@
 <sc-for list="{{ panelRows }}" as="j" hint-placeholder-count="4">
 <div style="display:flex;flex-direction:column;gap:9px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07);animation:cdFade .34s ease both">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
-<div style="font:600 15px/1 Archivo,sans-serif;letter-spacing:.01em;text-transform:uppercase">{{ j.role }}</div>
-<div style="font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:{{ j.color }};white-space:nowrap">{{ j.call }}</div>
+<div style="font:600 15px/1 Archivo,sans-serif;letter-spacing:.01em;text-transform:uppercase;color:{{ j.roleColor }};transition:color .55s ease">{{ j.role }}</div>
+<div style="font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:{{ j.color }};white-space:nowrap;animation:{{ j.callAnim }};transition:color .3s ease">{{ j.call }}</div>
 </div>
-<div style="font:400 14px/1.5 'Instrument Sans',system-ui;color:#8A9099;text-wrap:pretty">{{ j.note }}</div>
+<div style="font:400 14px/1.5 'Instrument Sans',system-ui;color:{{ j.noteColor }};text-wrap:pretty;opacity:{{ j.noteOp }};transition:opacity .45s ease,color .55s ease">{{ j.note }}</div>
 </div>
 </sc-for>
 </div>
@@ -705,7 +713,7 @@ class Component extends DCLogic {
     screen: 'home', mode: 'ranked', side: 'CHALLENGE', sideRevealed: false,
     opened: [], choice: null, arg: '', gloss: null, glossDepth: 0,
     scope: 'GLOBAL', ticketOpen: false, ticketPick: 'CHALLENGE',
-    ticketSide: null, termsOpened: [], revealed: 0
+    ticketSide: null, termsOpened: [], revealed: 0, reading: -1, noted: 0
   };
 
   screenRef = React.createRef();
@@ -724,6 +732,25 @@ class Component extends DCLogic {
     { role: 'The Textualist', win: true, note: '\u201cDo not access company offices\u201d is not ambiguous, and you read it rather than around it.' },
     { role: 'The Consequentialist', win: false, note: 'Neither argument asked what the rule is for. Yours came closer to treating it as an end in itself.' }
   ];
+
+  // §15.4 — aggregate score margin, on the panel scale. The tally alone can
+  // misrepresent the result: 8-2 at +12 and 8-2 at +71 are not the same match,
+  // so the reveal must show both.
+  PANEL_MARGIN = 23;
+
+  // The seat at which the outcome stops being in doubt. It earns a longer beat.
+  // Ten evenly-paced reveals read as a list being printed, not as a verdict.
+  clinchIndex() {
+    if (this._clinch !== undefined) return this._clinch;
+    let f = 0, a = 0;
+    this._clinch = -1;
+    for (let i = 0; i < this.PANEL.length; i++) {
+      if (this.PANEL[i].win === true) f++;
+      else if (this.PANEL[i].win === false) a++;
+      if (Math.abs(f - a) > this.PANEL.length - (i + 1)) { this._clinch = i; break; }
+    }
+    return this._clinch;
+  }
 
   GLOSS = {
     knowingly: {
@@ -780,7 +807,7 @@ class Component extends DCLogic {
     ]
   };
 
-  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._nt); clearInterval(this._rv); }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._nt); clearTimeout(this._rt); }
 
   anim(el, keyframes, options) {
     const M = window.Motion;
@@ -822,25 +849,62 @@ class Component extends DCLogic {
     } else if (el && !this._navving && el.style.opacity === '0') {
       this.reveal(el);
     }
+    // Follow the juror in play. Without this the reveal walks off the bottom of
+    // the screen and the player has to chase it with their thumb.
+    const s = this.state;
+    const upto = s.reading >= 0 ? s.reading + 1 : s.revealed;
+    if (s.screen === 'verdict' && s.mode === 'ranked' && upto !== this._lastUpto) {
+      this._lastUpto = upto;
+      const sc = el && el.querySelector('[data-screen-label="Panel Reveal"]');
+      if (sc && upto > 0) sc.scrollTo({ top: sc.scrollHeight, behavior: 'smooth' });
+    }
   }
 
-  // §27.4 — verdicts arrive together; the sequential presentation is the payoff,
-  // and in production it also covers the round trip.
+  // §27.4 — all ten verdicts arrive together in one call; the sequential
+  // presentation is the payoff, and in production it also covers the round trip.
+  //
+  // Each juror gets THREE beats, not one. A juror who appears already decided is
+  // a row in a table. A juror who appears, is seen reading, THEN calls, is a
+  // juror. The gap between beat 1 and beat 2 is the entire product moment.
+  //
+  //   beat 1  the seat is named and visibly reading
+  //   beat 2  the call lands, tally ticks, pip fills
+  //   beat 3  the rationale writes in underneath
+  //
+  // Pacing is deliberately NOT uniform. The first two teach the format and are
+  // slow; the middle accelerates once the player has learned it; the last three
+  // slow again because by then the tally is close enough for each to matter.
+  pace(i) {
+    let read, note;
+    if (i <= 1)      { read = 720; note = 760; }
+    else if (i <= 6) { read = 300; note = 340; }
+    else             { read = 460; note = 480; }
+    if (i === this.clinchIndex()) { read += 380; note += 320; }
+    return { read: read, gap: 190, note: note };
+  }
+
   startReveal = () => {
-    clearInterval(this._rv);
-    this.setState({ revealed: 0 });
-    this._rv = setInterval(() => {
-      this.setState(s => {
-        const n = s.revealed + 1;
-        if (n >= this.PANEL.length) clearInterval(this._rv);
-        return { revealed: n };
-      });
-    }, 640);
+    clearTimeout(this._rt);
+    this.setState({ revealed: 0, reading: -1, noted: 0 });
+    this._rt = setTimeout(() => this.revealStep(0), 260);
+  };
+
+  revealStep = (i) => {
+    if (i >= this.PANEL.length) { this.setState({ reading: -1 }); return; }
+    const p = this.pace(i);
+    this.setState({ reading: i });
+    this._rt = setTimeout(() => {
+      this.setState({ revealed: i + 1, reading: -1 });
+      this._rt = setTimeout(() => {
+        this.setState({ noted: i + 1 });
+        this._rt = setTimeout(() => this.revealStep(i + 1), p.note);
+      }, p.gap);
+    }, p.read);
   };
 
   skipReveal = () => {
-    clearInterval(this._rv);
-    this.setState({ revealed: this.PANEL.length });
+    clearTimeout(this._rt);
+    this.setState({ revealed: this.PANEL.length, noted: this.PANEL.length, reading: -1 });
   };
 
   go = (screen) => () => this.navigate(screen);
@@ -895,12 +959,19 @@ class Component extends DCLogic {
     const openedFull = bundle.filter(e => s.opened.indexOf(e.id) !== -1);
     const unopened = bundle.filter(e => s.opened.indexOf(e.id) === -1);
 
-    // §27.4 — panel tally derived from however many jurors have been revealed.
-    const shown = this.PANEL.slice(0, s.revealed);
-    const forYou = shown.filter(j => j.win).length;
-    const against = shown.length - forYou;
-    const panelDone = s.revealed >= this.PANEL.length;
+    // §27.4 — the tally counts only jurors who have LANDED a call. A juror
+    // mid-read is on screen and must not move the number: that gap is the point.
+    const landed = this.PANEL.slice(0, s.revealed);
+    const forYou = landed.filter(j => j.win === true).length;
+    const against = landed.filter(j => j.win === false).length;
+    // Contract §6 — abstentions are rendered, never hidden. A panel that cannot
+    // separate two arguments is saying something specific about them.
+    const abstained = landed.filter(j => j.win === null).length;
+    const panelDone = s.revealed >= this.PANEL.length && s.noted >= this.PANEL.length;
     const won = forYou > against;
+    // Rows on screen include the juror currently reading — you see WHO is
+    // reading before you see what they found.
+    const upto = s.reading >= 0 ? s.reading + 1 : s.revealed;
     const g = s.gloss ? this.GLOSS[s.gloss] : null;
     const capped = s.glossDepth >= 3;
     const allTerms = ['knowingly', 'licensed', 'notice', 'constructive-notice'];
@@ -1010,7 +1081,7 @@ class Component extends DCLogic {
       lockedBody: ranked
         ? 'Your argument goes to the panel now. Your opponent’s was filed days ago and has not changed.'
         : 'Your judgment is recorded. It cannot be changed for this case.',
-      lockedFoot: ranked ? 'Ten jurors read it. The verdict is immediate.' : 'Results update as others submit.',
+      lockedFoot: ranked ? 'Ten jurors are reading it now.' : 'Results update as others submit.',
 
       yourPick: s.choice === 'b' ? 'Challenge' : 'Defend',
       minorityPct: s.choice === 'b' ? '38%' : '62%',
@@ -1055,16 +1126,39 @@ class Component extends DCLogic {
       panelTally: forYou + '–' + against,
       panelMeta: panelDone
         ? 'PANEL OF TEN · ALL READ'
-        : 'PANEL OF TEN · ' + s.revealed + ' OF ' + this.PANEL.length + ' READ',
+        : 'PANEL OF TEN · READING ' + Math.max(upto, 1) + ' OF ' + this.PANEL.length,
       panelMetaColor: panelDone ? (won ? '#63B37F' : '#D2665F') : '#7A828B',
+      // §15.4 — tally and margin are shown together or the tally lies.
+      panelMargin: (this.PANEL_MARGIN > 0 ? '+' : '') + this.PANEL_MARGIN,
+      panelSeparation: Math.abs(this.PANEL_MARGIN) < 25 ? 'narrowly'
+        : Math.abs(this.PANEL_MARGIN) < 60 ? 'clearly' : 'decisively',
+      panelAbstained: abstained + (abstained === 1 ? ' abstained' : ' abstained'),
+      panelHasAbstained: abstained > 0,
       panelPips: this.PANEL.map((j, i) => ({
-        color: i >= s.revealed ? '#1B1E21' : (j.win ? '#63B37F' : '#454B52')
+        color: i === s.reading ? '#3A4045'
+          : i >= s.revealed ? '#1B1E21'
+          : j.win === true ? '#63B37F'
+          : j.win === null ? '#262A2E' : '#454B52',
+        anim: i === s.reading ? 'cdPulse 1s ease-in-out infinite' : 'none'
       })),
-      panelRows: shown.map(j => ({
-        role: j.role, note: j.note,
-        call: j.win ? 'FOR YOU' : 'AGAINST',
-        color: j.win ? '#63B37F' : '#7A828B'
-      })),
+      panelRows: this.PANEL.slice(0, upto).map((j, i) => {
+        const isLanded = i < s.revealed;
+        // Only the juror in play is at full contrast. Settled rows recede rather
+        // than compete — §26.4 forbids buying emphasis with extra colour, so the
+        // emphasis is carried by weight and greyscale instead.
+        const isLatest = i === upto - 1;
+        return {
+          role: j.role,
+          note: j.note,
+          noteOp: i < s.noted ? 1 : 0,
+          call: !isLanded ? 'READING' : j.win === true ? 'FOR YOU'
+            : j.win === false ? 'AGAINST' : 'CANNOT SEPARATE',
+          color: !isLanded ? '#4E545B' : j.win === true ? '#63B37F' : '#7A828B',
+          callAnim: isLanded ? 'none' : 'cdPulse 1.05s ease-in-out infinite',
+          roleColor: isLatest ? '#ECEDEE' : '#6E757C',
+          noteColor: isLatest ? '#8A9099' : '#5B6167'
+        };
+      }),
       skipReveal: this.skipReveal,
       outcomeLabel: won ? 'THE PANEL FINDS FOR YOU' : 'THE PANEL FINDS AGAINST YOU',
       outcomeColor: won ? '#63B37F' : '#D2665F',
